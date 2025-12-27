@@ -47,3 +47,20 @@ bool isnewline(const char* s, int* len) {
   }
   return false;
 }
+
+const char* parse_org(const char* cursor, long* addr_out) {
+  assert(addr_out && "Must call parse_org with non null addr_out");
+  const char* orig = cursor;
+  // skip "org"
+  cursor += 3;
+  // skip spaces
+  while (cursor && *cursor == ' ') cursor++;
+  // parse number
+  const char* before_number = cursor;
+  const char* after_number = parse_number(cursor, addr_out);
+  if (after_number == before_number) {
+    printf("Failed to read number in org\n");
+    return orig;
+  }
+  return after_number;
+}

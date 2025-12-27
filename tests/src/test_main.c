@@ -4,6 +4,7 @@ MunitTest parse_test[] = {
   {"/number",   parse_number_test,    NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
   {"/alphalen", parser_alphalen_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
   {"/isnewline", parser_isnewline_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  {"/parse_org", parser_parse_org_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
   {NULL, NULL, NULL, 0, MUNIT_TEST_OPTION_NONE},
 };
 

@@ -2,6 +2,7 @@
 #define ENABLE_PRIVATE_INTERFACE
 #include "parser.h"
 #include <stdbool.h>
+#include <stdio.h>
 
 typedef struct {
   bool end;
@@ -19,6 +20,14 @@ typedef struct {
     int len;
   } expected;
 } alphalen_struct;
+
+typedef struct {
+  const char* input;
+  struct {
+    int addr;
+    const char* remaining;
+  } expected;
+} org_struct;
 
 MunitResult parse_number_test(const MunitParameter *params, void *fixture) {
   parse_number_struct tests[] = {
@@ -88,5 +97,27 @@ MunitResult parser_isnewline_test(const MunitParameter *params, void *fixture) {
     buff[1] = 0;
     munit_assert_false(isnewline(buff, &len));
   }
+  return MUNIT_OK;
+}
+
+MunitResult parser_parse_org_test(const MunitParameter *params, void *fixture) {
+  org_struct tests[] = {
+    { "org $0800\nad",     { 0x800,  "\nad" } },
+    { "org $1800\nlda #x", { 0x1800, "\nlda #x" } },
+    { "org $40\nlda #x",   { 0x40,   "\nlda #x" } },
+    { "org $5341\nlda #x", { 0x5341, "\nlda #x" } },
+    { NULL, 0 }
+  };
+
+  for (int i = 0; tests[i].input != NULL; i++) {
+    org_struct test = tests[i];
+    const char* code = test.input;
+    long addr;
+    const char* c = parse_org(code, &addr);
+    munit_assert_int(addr, ==, test.expected.addr);
+    munit_assert_char(*c, ==, '\n');
+    munit_assert_string_equal(c, test.expected.remaining);
+  }
+
   return MUNIT_OK;
 }
