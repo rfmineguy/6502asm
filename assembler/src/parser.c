@@ -1,0 +1,24 @@
+#include <assert.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+#include "parser.h"
+
+const char* parse_number(const char* cursor, long* num_out) {
+  assert(num_out && "Must call parse number with non null num_out");
+  const char* orig = cursor;
+  int base = 10;
+  if (*cursor == '$') {
+    base = 16;
+    cursor++;
+  }
+  char* end;
+  *num_out = strtol(cursor, &end, base);
+  if (*num_out == 0) {
+    fprintf(stderr, "parse_number: %s\n", strerror(errno));
+    return orig;
+  }
+  return end;
+}
