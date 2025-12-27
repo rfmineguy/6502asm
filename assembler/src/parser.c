@@ -28,3 +28,9 @@ const char* parse_number(const char* cursor, long* num_out) {
   }
   return end;
 }
+
+int alphalen(const char* cursor) {
+  int len = 0;
+  while (isalpha(*(cursor++))) len++;
+  return len;
+}
