@@ -72,3 +72,21 @@ MunitResult parser_alphalen_test(const MunitParameter *params, void *fixture) {
 
   return MUNIT_OK;
 }
+
+MunitResult parser_isnewline_test(const MunitParameter *params, void *fixture) {
+  int len;
+  munit_assert_true(isnewline("\n", &len));
+  munit_assert_int(len, ==, 1);
+  munit_assert_true(isnewline("\r", &len));
+  munit_assert_int(len, ==, 1);
+  munit_assert_true(isnewline("\r\n", &len));
+  munit_assert_int(len, ==, 2);
+
+  char buff[5];
+  for (char c = 'a'; c <= 'z'; c++) {
+    buff[0] = c;
+    buff[1] = 0;
+    munit_assert_false(isnewline(buff, &len));
+  }
+  return MUNIT_OK;
+}
