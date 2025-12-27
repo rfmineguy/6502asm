@@ -1,0 +1,10 @@
+package "6502-asm"
+version "1.0"
+purpose "6520 assembler"
+usage "6502-asm <args>"
+description "Assemble 6520 assembly into machine code"
+versiontext "1.0"
+
+args "<command line options>"
+
+option  "input"        i "Input assembly file"     string       required
