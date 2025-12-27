@@ -20,7 +20,10 @@ const char* parse_number(const char* cursor, long* num_out) {
   char* end;
   *num_out = strtol(cursor, &end, base);
   if (*num_out == 0) {
-    fprintf(stderr, "parse_number: %s\n", strerror(errno));
+    // TODO: These errors should be propogated to some sort of report system
+    // if (errno == EINVAL || errno == ERANGE) {
+    //   fprintf(stderr, "parse_number: %*s '%s'\n", 9, cursor, strerror(errno));
+    // }
     return orig;
   }
   return end;
