@@ -4,11 +4,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
+#define ENABLE_PRIVATE_INTERFACE
 #include "parser.h"
 
 const char* parse_number(const char* cursor, long* num_out) {
-  assert(num_out && "Must call parse number with non null num_out");
+  assert(num_out && "Must call parse_number with non null num_out");
   const char* orig = cursor;
+  if (cursor == NULL) return NULL;
+  if (*cursor == 0) return orig;
   int base = 10;
   if (*cursor == '$') {
     base = 16;
