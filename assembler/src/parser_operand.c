@@ -26,3 +26,21 @@ const char* parse_op_immediate(const char* cursor, long* val) {
   }
   return new_cursor;
 }
+
+// zp
+const char* parse_op_zp(const char* cursor, long* val) {
+  const char* orig = cursor;
+
+  while (*cursor == ' ') cursor++;
+
+  const char* new_cursor;
+  if ((new_cursor = util_parse_number(cursor, val)) == cursor) {
+    return orig;
+  }
+  cursor = new_cursor;
+
+  if (*val < 0 || *val > UCHAR_MAX) {
+    return orig;
+  }
+  return cursor;
+}

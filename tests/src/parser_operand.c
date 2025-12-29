@@ -39,3 +39,34 @@ MunitResult parse_operand_immediate_test(const MunitParameter *params, void *fix
   }
   return MUNIT_OK;
 }
+
+MunitResult parse_operand_zp_test(const MunitParameter *params, void *fixture) {
+  parse_operand_struct tests[] = {
+    { "$0",      { true,  0x00 } },
+    { "$000000", { true,  0x00 } },
+    { "$00010",  { true,  0x10 } },
+    { "$00020",  { true,  0x20 } },
+    { "$00030",  { true,  0x30 } },
+    { "$00040",  { true,  0x40 } },
+    { "$00050",  { true,  0x50 } },
+    { "$00060",  { true,  0x60 } },
+    { "$00070",  { true,  0x70 } },
+    { "$00080",  { true,  0x80 } },
+    { "$000256", { false, -1   } },
+    { "$100256", { false, -1   } },
+    { NULL }
+  };
+
+  for (int i = 0; tests[i].input; i++) {
+    parse_operand_struct test = tests[i];
+    long val;
+    const char* new_cursor = parse_op_zp(test.input, &val);
+    if (test.expected.ok) {
+      munit_assert_ptr_not_equal(tests[i].input, new_cursor);
+      munit_assert_int(val, ==, tests[i].expected.val);
+    }
+    else
+      munit_assert_ptr_equal(tests[i].input, new_cursor);
+  }
+  return MUNIT_OK;
+}
