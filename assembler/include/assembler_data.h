@@ -1,0 +1,78 @@
+#ifndef ASSEMBLER_DATA_H
+#define ASSEMBLER_DATA_H
+#include <stdint.h>
+
+#define _bytes(...) {__VA_ARGS__}
+
+#define li_directive(directive_)\
+  (line_info){\
+    .type = lt_directive,\
+    .line_number = ctx->line_number,\
+    .column_number = ctx->column_number,\
+    .filename = "",\
+    .data.directive = directive_,\
+  }
+
+#define li_instruction(instruction_)\
+  (line_info){\
+    .type = lt_instruction,\
+    .line_number = ctx->line_number,\
+    .column_number = ctx->column_number,\
+    .filename = "",\
+    .data.instruction = instruction_,\
+  }
+
+#define ins(len, ...)\
+  (instruction) {\
+    .length = len,\
+    .bytes = { __VA_ARGS__ }\
+  }
+
+typedef struct {
+  uint8_t length;
+  union {
+    uint8_t bytes[3];
+    struct {
+      uint8_t opcode;
+      uint8_t byte1;
+      uint8_t byte2;
+    };
+  };
+} instruction;
+
+typedef enum {
+  dt_org,
+} directive_type;
+
+typedef struct {
+  directive_type type;
+  union {
+    struct {
+      uint16_t addr;
+    } org;
+  } data;
+} directive;
+
+typedef enum {
+  lt_none,
+  lt_instruction,
+  lt_directive,
+  lt_label,
+} line_type;
+
+typedef struct {
+  line_type type;
+  int line_number, column_number;
+  const char* filename;
+  union {
+    instruction instruction;
+    directive directive;
+    const char* label;
+  } data;
+} line_info;
+
+typedef struct {
+  int line_number, column_number;
+} parse_ctx;
+
+#endif
