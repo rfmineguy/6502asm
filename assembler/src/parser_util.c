@@ -37,3 +37,16 @@ int util_alphalen(const char* cursor) {
   while (isalpha(*(cursor++))) len++;
   return len;
 }
+
+bool util_isnewline(const char* s, int* len) {
+  assert(len && "Must call isnewline with non null len");
+  if (*s == '\r' && *(s + 1) == '\n') {
+    *len = 2;
+    return true;
+  }
+  if (*s == '\n' || *s == '\r') {
+    *len = 1;
+    return true;
+  }
+  return false;
+}

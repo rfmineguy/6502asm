@@ -18,4 +18,17 @@ const char* util_parse_number(const char*, long*);
  *            cursor
  */
 int         util_alphalen(const char* cursor);
+
+/*
+ * Desc:    check if the sequence pointed to by s is a newline
+ * Formats:
+ *    \r\n
+ *    \r
+ *    \n
+ * Return:
+ *    True if its a newline
+ *    False if not
+ */
+bool        util_isnewline(const char* s, int* len);
+
 #endif
