@@ -178,3 +178,39 @@ MunitResult parse_operand_absolutex_test(const MunitParameter *params, void *fix
   }
   return MUNIT_OK;
 }
+MunitResult parse_operand_absolutey_test(const MunitParameter *params, void *fixture) {
+  parse_operand_struct tests[] = {
+    { "$0, Y",       { true,  0x00 } },
+    { "$000000, Y",  { true,  0x00 } },
+    { "$00010, Y",   { true,  0x10 } },
+    { "$00020, Y",   { true,  0x20 } },
+    { "$00030, Y",   { true,  0x30 } },
+    { "$00040, Y",   { true,  0x40 } },
+    { "$00050, Y",   { true,  0x50 } },
+    { "$00060, Y",   { true,  0x60 } },
+    { "   $00070, Y",{ true,  0x70 } },
+    { "$00080, Y",   { true,  0x80 } },
+    { "$000256, Y",  { true,  0x256} },
+    { "$100256, Y",  { false, -1   } },
+    { "$10, Y 0256", { true,  0x10 } },
+    { "$10, 0256",   { false,  0x10 } },
+    { "$10, X 0256", { false,  0x10 } },
+    { "$12 Y 0256",  { false,  0x12 } },
+    { "$10, 0256",   { false,  0x10 } },
+    { NULL }
+  };
+
+  for (int i = 0; tests[i].input; i++) {
+    munit_logf(MUNIT_LOG_INFO, "%s", tests[i].input);
+    parse_operand_struct test = tests[i];
+    long val;
+    const char* new_cursor = parse_op_absolutey(test.input, &val);
+    if (test.expected.ok) {
+      munit_assert_ptr_not_equal(tests[i].input, new_cursor);
+      munit_assert_int(val, ==, tests[i].expected.val);
+    }
+    else
+      munit_assert_ptr_equal(tests[i].input, new_cursor);
+  }
+  return MUNIT_OK;
+}

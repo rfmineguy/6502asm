@@ -15,4 +15,7 @@ const char* parse_op_absolute(const char* cursor, long* val);
 
 // absolute, X
 const char* parse_op_absolutex(const char* cursor, long* val);
+
+// absolute, Y
+const char* parse_op_absolutey(const char* cursor, long* val);
 #endif
