@@ -93,3 +93,30 @@ const char* parse_op_absolute(const char* cursor, long* val) {
 
   return new_cursor;
 }
+
+// absolute, X
+const char* parse_op_absolutex(const char* cursor, long* val) {
+  const char* orig = cursor;
+
+  while (*cursor == ' ') cursor++;
+  const char* new_cursor;
+  if ((new_cursor = util_parse_number(cursor, val)) == cursor) {
+    return orig;
+  }
+  cursor = new_cursor;
+  if (*val < 0 || *val > USHRT_MAX) {
+    return orig;
+  }
+  cursor = new_cursor;
+  while (*cursor == ' ') cursor++;
+  if (*cursor != ',') {
+    return orig;
+  }
+  cursor++;
+  while (*cursor == ' ') cursor++;
+  if (*cursor != 'X') {
+    return orig;
+  }
+  cursor++;
+  return cursor;
+}

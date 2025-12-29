@@ -12,4 +12,7 @@ const char* parse_op_zpx(const char* cursor, long* val);
 
 // absolute
 const char* parse_op_absolute(const char* cursor, long* val);
+
+// absolute, X
+const char* parse_op_absolutex(const char* cursor, long* val);
 #endif
