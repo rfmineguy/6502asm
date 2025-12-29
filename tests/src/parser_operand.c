@@ -70,3 +70,43 @@ MunitResult parse_operand_zp_test(const MunitParameter *params, void *fixture) {
   }
   return MUNIT_OK;
 }
+MunitResult parse_operand_zpx_test(const MunitParameter *params, void *fixture) {
+  parse_operand_struct tests[] = {
+    { "$0, X",       { true,  0x00 } },
+    { "$000000, X",  { true,  0x00 } },
+    { "$00000, Y",   { false, 0x60 } },
+    { "$00010, X",   { true,  0x10 } },
+    { "$00010, Y",   { false, 0x60 } },
+    { "$00020, X",   { true,  0x20 } },
+    { "$00020, Y",   { false, 0x60 } },
+    { "$00030, X",   { true,  0x30 } },
+    { "$00030, Y",   { false, 0x60 } },
+    { "$00040, X",   { true,  0x40 } },
+    { "$00040, Y",   { false, 0x60 } },
+    { "$00050, X",   { true,  0x50 } },
+    { "$00050, Y",   { false, 0x60 } },
+    { "$00060, X",   { true,  0x60 } },
+    { "$00060, Y",   { false, 0x60 } },
+    { "   $00070,X", { true,  0x70 } },
+    { "$00080,X",    { true,  0x80 } },
+    { "$000256, X",  { false, -1   } },
+    { "$100256, X",  { false, -1   } },
+    { "$10 0256, X", { false, -1   } },
+    { "$10",         { false, -1   } },
+    { "$10, Y",      { false, -1   } },
+    { NULL }
+  };
+
+  for (int i = 0; tests[i].input; i++) {
+    parse_operand_struct test = tests[i];
+    long val;
+    const char* new_cursor = parse_op_zpx(test.input, &val);
+    if (test.expected.ok) {
+      munit_assert_ptr_not_equal(tests[i].input, new_cursor);
+      munit_assert_int(val, ==, tests[i].expected.val);
+    }
+    else
+      munit_assert_ptr_equal(tests[i].input, new_cursor);
+  }
+  return MUNIT_OK;
+}

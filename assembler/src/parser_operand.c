@@ -44,3 +44,33 @@ const char* parse_op_zp(const char* cursor, long* val) {
   }
   return cursor;
 }
+
+// zp,X
+const char* parse_op_zpx(const char* cursor, long* val) {
+  const char* orig = cursor;
+
+  while (*cursor == ' ') cursor++;
+  
+  const char* new_cursor;
+  if ((new_cursor = util_parse_number(cursor, val)) == cursor) {
+    return orig;
+  }
+  cursor = new_cursor;
+
+  if (*val < 0 || *val > UCHAR_MAX) {
+    return orig;
+  }
+
+  while (*cursor == ' ') cursor++;
+  if (*cursor != ',') {
+    return orig;
+  }
+  cursor++;
+
+  while (*cursor == ' ') cursor++;
+  if (*cursor != 'X') {
+    return orig;
+  }
+  cursor++;
+  return cursor;
+}
