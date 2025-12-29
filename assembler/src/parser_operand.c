@@ -74,3 +74,22 @@ const char* parse_op_zpx(const char* cursor, long* val) {
   cursor++;
   return cursor;
 }
+
+// absolute
+const char* parse_op_absolute(const char* cursor, long* val) {
+  const char* orig = cursor;
+
+  while (*cursor == ' ') cursor++;
+  
+  const char* new_cursor;
+  if ((new_cursor = util_parse_number(cursor, val)) == cursor) {
+    return orig;
+  }
+  cursor = new_cursor;
+
+  if (*val < 0 || *val > USHRT_MAX) {
+    return orig;
+  }
+
+  return new_cursor;
+}
