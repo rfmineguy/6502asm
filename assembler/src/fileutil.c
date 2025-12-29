@@ -8,7 +8,7 @@
   return NULL;\
 }
 
-char* fu_read(const char* filename) {
+const char* fu_read(const char* filename) {
   size_t len;
   FILE* f = fopen(filename, "r");
   if (!f)                          handle_error("Failed to open filename %s", filename);
@@ -22,6 +22,7 @@ char* fu_read(const char* filename) {
   size_t read = fread(buf, 1, len, f);
   if (read != len) handle_error("Failed to read %zu bytes from file %s (read %zu bytes)", len, filename, read);
   if (fclose(f) == EOF) handle_error("Failed to close file %s", filename);
+  buf[read] = 0;
 
   return buf;
 }
