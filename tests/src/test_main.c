@@ -1,15 +1,17 @@
 #include "tests.h"
 
-MunitTest parse_test[] = {
-  {"/number",   parse_number_test,    NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  {"/alphalen", parser_alphalen_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  {"/isnewline", parser_isnewline_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  {"/parse_org", parser_parse_org_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+MunitTest parse_util[] = {
+  {"/number",    parse_util_parse_number_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
   {NULL, NULL, NULL, 0, MUNIT_TEST_OPTION_NONE},
 };
 
+MunitSuite parse_suite[] = {
+  {"/util",      parse_util,      NULL, 1, MUNIT_SUITE_OPTION_NONE },
+  {NULL, NULL, NULL, 0, MUNIT_SUITE_OPTION_NONE},
+};
+
 MunitSuite suite = {
-  "/parse", parse_test, NULL, 1, MUNIT_SUITE_OPTION_NONE
+  "/parse", NULL, parse_suite, 1, MUNIT_SUITE_OPTION_NONE
 };
 
 int main(int argc, char** argv) {
