@@ -31,3 +31,9 @@ const char* util_parse_number(const char* cursor, long* num_out) {
   }
   return end;
 }
+
+int util_alphalen(const char* cursor) {
+  int len = 0;
+  while (isalpha(*(cursor++))) len++;
+  return len;
+}

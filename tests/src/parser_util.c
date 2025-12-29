@@ -11,6 +11,13 @@ typedef struct {
   } expected;
 } parse_number_struct;
 
+typedef struct {
+  const char* input;
+  struct {
+    int len;
+  } expected;
+} alphalen_struct;
+
 MunitResult parse_util_parse_number_test(const MunitParameter *params, void *fixture) {
   parse_number_struct tests[] = {
     {false, "52746daf",     { true, 52746, "daf" } },
@@ -43,6 +50,27 @@ MunitResult parse_util_parse_number_test(const MunitParameter *params, void *fix
     }
     else
       munit_assert_ptr_equal(s, test.input);
+  }
+
+  return MUNIT_OK;
+}
+
+MunitResult parse_util_alphalen_test(const MunitParameter *params, void *fixture) {
+  alphalen_struct tests[] = {
+    { "hello",   { 5 } },
+    { "general", { 7 } },
+    { "akjfskd,jadkmfhamhfsikjaduj", { 7 } },
+    { "akjfskdjadkmf83hamhfsikjaduj", { 13 } },
+    { "2kjfskdjadkmf", { 0 } },
+    { "akjfskdjadkmf#3hamhfsikjaduj", { 13 } },
+    { "2kjfskdjadkmf", { 0 } },
+    { NULL, 0 }
+  };
+
+  for (int i = 0; tests[i].input != NULL; i++) {
+    alphalen_struct test = tests[i];
+    int len = util_alphalen(test.input);
+    munit_assert_long(len, ==, tests[i].expected.len);
   }
 
   return MUNIT_OK;

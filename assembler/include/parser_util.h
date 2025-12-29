@@ -13,4 +13,9 @@
  */
 const char* util_parse_number(const char*, long*);
 
+/*
+ * Desc:    count how many consecutive alpha characters there are starting at
+ *            cursor
+ */
+int         util_alphalen(const char* cursor);
 #endif
