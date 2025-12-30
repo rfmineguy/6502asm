@@ -12,4 +12,7 @@
  */
 const char* dir_parse_org(const char* cursor, uint16_t* addr_out);
 
+
+const char* dir_parse_directive(const char* cursor, directive* dir_out);
+
 #endif

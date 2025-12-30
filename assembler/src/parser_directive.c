@@ -25,3 +25,20 @@ const char* dir_parse_org(const char* cursor, uint16_t* addr_out) {
   *addr_out = val & 0xffff;
   return new_cursor;
 }
+
+const char* dir_parse_directive(const char* cursor, directive* dir_out) {
+  assert(dir_out && "Must call parse_directive with non null dir_out");
+  const char* orig = cursor;
+  const char* new_cursor;
+  if (strncmp(cursor, "org", 3) == 0) {
+    dir_out->type = dt_org;
+    cursor += 3;
+    while (*cursor == ' ') cursor++;
+    if ((new_cursor = dir_parse_org(cursor, &dir_out->data.org.addr)) == cursor) {
+      return orig;
+    }
+    return new_cursor;
+  }
+  assert(0 && "directive not implemented");
+  return orig;
+}
