@@ -1,6 +1,7 @@
 #ifndef ASSEMBLER_DATA_H
 #define ASSEMBLER_DATA_H
 #include <stdint.h>
+#include "parser_errors.h"
 
 #define _bytes(...) {__VA_ARGS__}
 
@@ -20,6 +21,15 @@
     .column_number = ctx->column_number,\
     .filename = "",\
     .data.instruction = instruction_,\
+  }
+
+#define li_error(error_)\
+  (line_info){\
+    .type = lt_error,\
+    .line_number = ctx->line_number,\
+    .column_number = ctx->column_number,\
+    .filename = "",\
+    .data.error = error_,\
   }
 
 #define ins(len, ...)\
@@ -58,6 +68,7 @@ typedef enum {
   lt_instruction,
   lt_directive,
   lt_label,
+  lt_error
 } line_type;
 
 typedef struct {
@@ -68,6 +79,7 @@ typedef struct {
     instruction instruction;
     directive directive;
     const char* label;
+    error_parse_op error;
   } data;
 } line_info;
 
