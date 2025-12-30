@@ -5,9 +5,9 @@ INCLUDE ?= $(THIS_DIR)/../assembler/include
 OUT ?= out
 TESTS_OUTDIR := $(OUT)
 
-TESTS_SOURCES := \
                  $(THIS_DIR)/src/parser_operand.c\
                  $(THIS_DIR)/src/parser_util.c\
+                 $(THIS_DIR)/src/parser_instruction_ora.c\
                  $(THIS_DIR)/src/munit.c\
                  $(THIS_DIR)/src/test_main.c
 

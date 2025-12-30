@@ -18,9 +18,28 @@ MunitTest parse_operand[] = {
   {"/indirecty", parse_operand_indirecty_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
   {NULL, NULL, NULL, 0, MUNIT_TEST_OPTION_NONE},
 };
+
+MunitTest parse_instruction_ora[] = {
+  {"/imm",      parse_instruction_ora_immediate_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  {"/zpx",      parse_instruction_ora_zpx_test      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  {"/zp",       parse_instruction_ora_zp_test       , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  {"/abs",      parse_instruction_ora_absolute_test , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  {"/absx",     parse_instruction_ora_absolutex_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  {"/absy",     parse_instruction_ora_absolutey_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  {"/indx",     parse_instruction_ora_indirectx_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  {"/indy",     parse_instruction_ora_indirecty_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  {NULL, NULL, NULL, 0, MUNIT_TEST_OPTION_NONE},
+};
+
+MunitSuite parse_instruction[] = {
+  {"/ora",       parse_instruction_ora, NULL, 1, MUNIT_SUITE_OPTION_NONE },
+  {NULL, NULL, NULL, 0, MUNIT_SUITE_OPTION_NONE},
+};
+
 MunitSuite parse_suite[] = {
-  {"/util",      parse_util,      NULL, 1, MUNIT_SUITE_OPTION_NONE },
-  {"/operand",   parse_operand,   NULL, 1, MUNIT_SUITE_OPTION_NONE },
+  {"/util",        parse_util,      NULL, 1, MUNIT_SUITE_OPTION_NONE },
+  {"/operand",     parse_operand,   NULL, 1, MUNIT_SUITE_OPTION_NONE },
+  {"/instruction", NULL, parse_instruction, 1, MUNIT_SUITE_OPTION_NONE },
   {NULL, NULL, NULL, 0, MUNIT_SUITE_OPTION_NONE},
 };
 
