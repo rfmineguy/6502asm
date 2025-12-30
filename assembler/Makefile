@@ -6,10 +6,15 @@ INCLUDE := $(THIS_DIR)/include
 SRC     := $(THIS_DIR)/src
 OUT     ?= out
 OBJ_OUT ?= $(OUT)/lib65asm
-CFG_GGO ?= $(THIS_DIR)/config.ggo
+CFG_GGO := $(THIS_DIR)/config.ggo
 
 SOURCES := $(SRC)/fileutil.c\
-           $(SRC)/parser.c
+           $(SRC)/parser.c\
+           $(SRC)/parser_directive.c\
+           $(SRC)/parser_instruction.c\
+           $(SRC)/parser_operand.c\
+           $(SRC)/parser_util.c\
+           $(SRC)/parser_errors.c
 
 MAIN    := $(SRC)/main.c\
            $(SRC)/cmdline.c
