@@ -4,63 +4,148 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
+#include <limits.h>
 #define ENABLE_PRIVATE_INTERFACE
 #include "parser.h"
+#include "parser_util.h"
+#include "parser_directive.h"
+#include "parser_operand.h"
+#include "parser_instruction.h"
+#include "parser_errors.h"
 
-const char* parse_number(const char* cursor, long* num_out) {
-  assert(num_out && "Must call parse_number with non null num_out");
-  const char* orig = cursor;
-  if (cursor == NULL) return NULL;
-  if (*cursor == 0) return orig;
-  int base = 10;
-  if (*cursor == '$') {
-    base = 16;
-    cursor++;
+void parser_print_instruction(instruction ins) {
+  assert(ins.length >= 1 && ins.length <= 3 && "Length 1,2,3 required");
+  if (ins.length == 1) {
+    printf("Instruction(1) {opcode: %02x}\n", ins.bytes[0]);
   }
-  char* end;
-  *num_out = strtol(cursor, &end, base);
-  if (*num_out == 0) {
-    // TODO: These errors should be propogated to some sort of report system
-    // if (errno == EINVAL || errno == ERANGE) {
-    //   fprintf(stderr, "parse_number: %*s '%s'\n", 9, cursor, strerror(errno));
-    // }
-    return orig;
+  else if (ins.length == 2) {
+    printf("Instruction(2) {opcode: %02x, operand: %x}\n", ins.bytes[0], ins.bytes[1]);
   }
-  return end;
+  else {
+    uint16_t operand = *((uint16_t*)(ins.bytes + 1));
+    printf("Instruction(3) {opcode: %02x, operand: %x}\n", ins.bytes[0], operand);
+  }
 }
 
-int alphalen(const char* cursor) {
-  int len = 0;
-  while (isalpha(*(cursor++))) len++;
-  return len;
+void parser_print_directive(directive dir) {
+  switch (dir.type) {
+    case dt_org:
+      {
+        printf("Directive {type: org, addr: %x}\n", dir.data.org.addr);
+        break;
+      }
+  }
 }
 
-bool isnewline(const char* s, int* len) {
-  assert(len && "Must call isnewline with non null len");
-  if (*s == '\r' && *(s + 1) == '\n') {
-    *len = 2;
-    return true;
+typedef enum state {
+  s_default,
+  s_directive,
+  s_unnamed_label,
+  s_instruction,
+  s_skip_line,
+  s_end,
+} state;
+
+const char* parse_line(const char* cursor, parse_ctx* ctx, line_info* line_info_out) {
+  assert(line_info_out && "ins_out must not be null");
+  assert(ctx           && "ctx must not be null");
+  if (*cursor == 0) return 0;
+
+  state state = s_default;
+  int newlinelen = 0;
+  *line_info_out = (line_info){0};
+  while (*cursor) {
+    if (state == s_default) {
+      while (*cursor && *cursor == ' ') cursor++;
+      if (util_isnewline(cursor, &newlinelen)) {
+        ctx->column_number = 0;
+        ctx->line_number++;
+        break;
+      }
+      if (*cursor == '.')             state = s_directive;
+      else if (*cursor == ':')        state = s_unnamed_label;
+      else if (util_alphalen(cursor) == 3) state = s_instruction;
+      else if (*cursor == ';')        state = s_skip_line;
+      else if (*cursor == ' ')        { cursor++; continue; }
+    }
+
+    if (state == s_end) break;
+
+    if (state == s_skip_line) {
+      while(*cursor) {
+        int len;
+        if (util_isnewline(cursor, &len)) {
+          cursor += len;
+          ctx->column_number = 0;
+          ctx->line_number++;
+          break;
+        }
+        else cursor ++;
+      }
+      state = s_end;
+      continue;
+    }
+
+    if (state == s_directive) {
+      cursor++;
+      directive dir;
+      const char* new_cursor = 0;
+
+      if ((new_cursor = dir_parse_directive(cursor, &dir)) != cursor) {
+        cursor = new_cursor;
+        *line_info_out = li_directive(dir);
+      }
+      state = s_default;
+      continue;
+    }
+
+    if (state == s_instruction) {
+      instruction ins;
+      error_parse_op error;
+      const char* new_cursor;
+      if ((new_cursor = ins_parse_instruction(cursor, &ins, &error)) != cursor) {
+        cursor = new_cursor;
+        *line_info_out = li_instruction(ins);
+      }
+      if (error != 0) {
+        state = s_skip_line;
+        *line_info_out = li_error(error);
+        continue;
+      }
+      state = s_default;
+      continue;
+    }
   }
-  if (*s == '\n' || *s == '\r') {
-    *len = 1;
-    return true;
-  }
-  return false;
+  return cursor + newlinelen;
 }
 
-const char* parse_org(const char* cursor, long* addr_out) {
-  assert(addr_out && "Must call parse_org with non null addr_out");
-  const char* orig = cursor;
-  // skip "org"
-  cursor += 3;
-  // skip spaces
-  while (cursor && *cursor == ' ') cursor++;
-  // parse number
-  const char* before_number = cursor;
-  const char* after_number = parse_number(cursor, addr_out);
-  if (after_number == before_number) {
-    printf("Failed to read number in org\n");
-    return orig;
+void parser_print_label(const char* label) {
+  printf("Label {name: %s}\n", label);
+}
+
+void parser_print_error(error_parse_op code) {
+  printf("Error {\n");
+  printf("\tcode: %d\n", code);
+  printf("\tmsg: %s\n", parser_errors_str(code));
+  printf("}\n");
+}
+
+void parser_print_lineinfo(line_info info) {
+  switch (info.type) {
+    case lt_none:
+      printf("LineInfo: none\n");
+      break;
+    case lt_instruction:
+      parser_print_instruction(info.data.instruction);
+      break;
+    case lt_directive:
+      parser_print_directive(info.data.directive);
+      break;
+    case lt_label:
+      parser_print_label(info.data.label);
+      break;
+    case lt_error:
+      parser_print_error(info.data.error);
+      break;
   }
-  return after_number;
 }
