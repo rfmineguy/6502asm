@@ -25,3 +25,5 @@ MunitResult parse_instruction_ora_absolutey_test(const MunitParameter *params, v
 MunitResult parse_instruction_ora_indirectx_test(const MunitParameter *params, void *fixture);
 MunitResult parse_instruction_ora_indirecty_test(const MunitParameter *params, void *fixture);
 MunitResult parse_instruction_ora_absolute_test (const MunitParameter *params, void *fixture);
+
+MunitResult parse_directive_org_test(const MunitParameter *params, void *fixture);

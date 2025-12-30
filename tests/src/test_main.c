@@ -19,6 +19,11 @@ MunitTest parse_operand[] = {
   {NULL, NULL, NULL, 0, MUNIT_TEST_OPTION_NONE},
 };
 
+MunitTest parse_directive[] = {
+  {"/org",       parse_directive_org_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  {NULL, NULL, NULL, 0, MUNIT_TEST_OPTION_NONE},
+};
+
 MunitTest parse_instruction_ora[] = {
   {"/imm",      parse_instruction_ora_immediate_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
   {"/zpx",      parse_instruction_ora_zpx_test      , NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
@@ -39,6 +44,7 @@ MunitSuite parse_instruction[] = {
 MunitSuite parse_suite[] = {
   {"/util",        parse_util,      NULL, 1, MUNIT_SUITE_OPTION_NONE },
   {"/operand",     parse_operand,   NULL, 1, MUNIT_SUITE_OPTION_NONE },
+  {"/directive",   parse_directive, NULL, 1, MUNIT_SUITE_OPTION_NONE },
   {"/instruction", NULL, parse_instruction, 1, MUNIT_SUITE_OPTION_NONE },
   {NULL, NULL, NULL, 0, MUNIT_SUITE_OPTION_NONE},
 };
