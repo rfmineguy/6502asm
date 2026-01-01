@@ -2,7 +2,7 @@ THIS_MAKEFILE := $(lastword $(MAKEFILE_LIST))
 THIS_DIR   := $(dir $(abspath $(THIS_MAKEFILE)))
 
 # Variables
-INCLUDE := $(THIS_DIR)/include
+INCLUDE := -I$(THIS_DIR)/include
 SRC     := $(THIS_DIR)/src
 OUT     ?= out
 OBJ_OUT ?= $(OUT)/lib65asm
@@ -42,13 +42,13 @@ $(OUT)/lib65asm.a: $(OBJS) | always
 	ar rcs $@ $^
 
 $(OBJ_OUT)/%.c.o: $(SRC)/%.c | always
-	$(CC) -c $^ -o $@ -ggdb -I$(INCLUDE) $(CFLAGS)
+	$(CC) -c $^ -o $@ -ggdb $(INCLUDE) $(CFLAGS)
 
 $(OUT)/main: $(MAIN) | $(OUT)/lib65asm.a
-	$(CC) $^ -o $@ -l65asm -L$(OUT) -I$(INCLUDE) $(CFLAGS)
+	$(CC) $^ -o $@ -l65asm -L$(OUT) $(INCLUDE) $(CFLAGS)
 
 $(OUT)/driver: $(DRIVER) | $(OUT)/lib65asm.a
-	$(CC) $^ -o $@ -l65asm -L$(OUT) -I$(INCLUDE) $(CFLAGS)
+	$(CC) $^ -o $@ -l65asm -L$(OUT) $(INCLUDE) $(CFLAGS)
 
 # Gengetopt
 gengetopt: $(INCLUDE)/65asm/cmdline.h $(SRC)/cmdline.c
