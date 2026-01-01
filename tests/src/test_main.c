@@ -49,10 +49,21 @@ MunitSuite parse_suite[] = {
   {NULL, NULL, NULL, 0, MUNIT_SUITE_OPTION_NONE},
 };
 
-MunitSuite suite = {
-  "/parse", NULL, parse_suite, 1, MUNIT_SUITE_OPTION_NONE
+MunitTest fileutil[] = {
+  {"/read",          fileutil_read_test         , NULL, NULL, MUNIT_TEST_OPTION_NONE },
+  {NULL, NULL, NULL, 0, MUNIT_TEST_OPTION_NONE},
+};
+
+MunitSuite suite[] = {
+  { "/fileutil", fileutil, NULL, 1, MUNIT_SUITE_OPTION_NONE },
+  { "/parse", NULL, parse_suite, 1, MUNIT_SUITE_OPTION_NONE },
+  {NULL, NULL, NULL, 0, MUNIT_SUITE_OPTION_NONE},
+};
+
+MunitSuite main_suite = {
+  "/main", NULL, suite, 1, MUNIT_SUITE_OPTION_NONE,
 };
 
 int main(int argc, char** argv) {
-  return munit_suite_main(&suite, 0, argc, argv);
+  return munit_suite_main(&main_suite, 0, argc, argv);
 }
