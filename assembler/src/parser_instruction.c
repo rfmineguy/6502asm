@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
-const char* ins_parse_ora(const char* cursor, instruction* ins_out, error_parse_op* error) {
+const char* ins_parse_ora(const char* cursor, instruction* ins_out, error_parse* error) {
   assert(error && "error must not be null");
 
   const char* new_cursor;
@@ -22,8 +22,8 @@ const char* ins_parse_ora(const char* cursor, instruction* ins_out, error_parse_
     *ins_out = (instruction){.length = 2, .opcode = 0x01, .byte1 = val & 0xff};
     return new_cursor;
   }
-  if (*error == ERROR_PARSE_OP_EXPECTED_LPAREN) goto skip_op_indx;
-  if (*error == ERROR_PARSE_OP_EXPECTED_COMMA) goto skip_op_indx;
+  if (*error == ERROR_PARSE_EXPECTED_LPAREN) goto skip_op_indx;
+  if (*error == ERROR_PARSE_EXPECTED_COMMA) goto skip_op_indx;
   if (*error != 0) return orig;
 
 skip_op_indx:
@@ -32,7 +32,7 @@ skip_op_indx:
     *ins_out = (instruction){.length = 2, .opcode = 0x11, .byte1 = val & 0xff};
     return new_cursor;
   }
-  if (*error == ERROR_PARSE_OP_EXPECTED_LPAREN) goto skip_op_indy;
+  if (*error == ERROR_PARSE_EXPECTED_LPAREN) goto skip_op_indy;
   if (*error != 0) return orig;
 
 skip_op_indy:
@@ -41,7 +41,7 @@ skip_op_indy:
     *ins_out = (instruction){.length = 2, .opcode = 0x09, .byte1 = val & 0xff};
     return new_cursor;
   }
-  if (*error == ERROR_PARSE_OP_EXPECTED_HASH) goto skip_op_imm;
+  if (*error == ERROR_PARSE_EXPECTED_HASH) goto skip_op_imm;
   if (*error != 0) return orig;
 
 skip_op_imm:
@@ -53,7 +53,7 @@ skip_op_imm:
     return new_cursor;
   }
   while (*new_cursor == ' ') new_cursor++;
-  if (*error == ERROR_PARSE_OP_NUMBER_OUT_OF_RANGE) goto skip_op_zp;
+  if (*error == ERROR_PARSE_NUMBER_OUT_OF_RANGE) goto skip_op_zp;
   if (*error != 0)  return orig;
 skip_op_zp:
 
@@ -63,7 +63,7 @@ skip_op_zp:
     return new_cursor;
   }
   while (*new_cursor == ' ') new_cursor++;
-  if (*error == ERROR_PARSE_OP_NUMBER_OUT_OF_RANGE) goto skip_op_absx;
+  if (*error == ERROR_PARSE_NUMBER_OUT_OF_RANGE) goto skip_op_absx;
   if (error != 0) return orig;
 
 skip_op_absx:
@@ -72,8 +72,8 @@ skip_op_absx:
     *ins_out = (instruction){.length = 3, .opcode = 0x1D, .byte1 = val & 0xff, .byte2 = (val >> 8) & 0xff};
     return new_cursor;
   }
-  if (*error == ERROR_PARSE_OP_EXPECTED_COMMA) goto skip_op_abs;
-  if (*error == ERROR_PARSE_OP_EXPECTED_X) goto skip_op_absy;
+  if (*error == ERROR_PARSE_EXPECTED_COMMA) goto skip_op_abs;
+  if (*error == ERROR_PARSE_EXPECTED_X) goto skip_op_absy;
   if (error != 0) return orig;
 
 skip_op_absy:
@@ -94,7 +94,7 @@ skip_op_abs:
   return orig;
 }
 
-const char* ins_parse_instruction(const char* cursor, instruction* ins_out, error_parse_op* error) {
+const char* ins_parse_instruction(const char* cursor, instruction* ins_out, error_parse* error) {
   assert(error && "error must not be null");
   const char* orig = cursor;
   const char* new_cursor;

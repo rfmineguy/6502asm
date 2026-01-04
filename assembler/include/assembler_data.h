@@ -79,7 +79,7 @@ typedef struct {
     instruction instruction;
     directive directive;
     const char* label;
-    error_parse_op error;
+    error_parse error;
   } data;
 } line_info;
 

@@ -1,9 +1,5 @@
 #include "munit.h"
 
-MunitResult parse_number_test(const MunitParameter params[], void* fixture);
-MunitResult parser_alphalen_test(const MunitParameter *params, void *fixture);
-MunitResult parser_isnewline_test(const MunitParameter *params, void *fixture);
-MunitResult parser_parse_org_test(const MunitParameter *params, void *fixture);
 MunitResult fileutil_read_test(const MunitParameter params[], void* fixture);
 
 MunitResult parse_util_parse_number_test(const MunitParameter params[], void* fixture);
@@ -29,3 +25,6 @@ MunitResult parse_instruction_ora_indirecty_test(const MunitParameter *params, v
 MunitResult parse_instruction_ora_absolute_test (const MunitParameter *params, void *fixture);
 
 MunitResult parse_directive_org_test(const MunitParameter *params, void *fixture);
+MunitResult parse_directive_byte_test(const MunitParameter *params, void *fixture);
+
+MunitResult parser_test(const MunitParameter *params, void *fixture);

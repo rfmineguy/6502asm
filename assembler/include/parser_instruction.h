@@ -7,8 +7,8 @@
  */
 
 
-const char* ins_parse_ora(const char* cursor, instruction* ins_out, error_parse_op* error);
+const char* ins_parse_ora(const char* cursor, instruction* ins_out, error_parse* error);
 
-const char* ins_parse_instruction(const char* cursor, instruction* ins_out, error_parse_op* error);
+const char* ins_parse_instruction(const char* cursor, instruction* ins_out, error_parse* error);
 
 #endif

@@ -89,11 +89,17 @@ const char* parse_line(const char* cursor, parse_ctx* ctx, line_info* line_info_
     if (state == s_directive) {
       cursor++;
       directive dir;
+      error_parse error;
       const char* new_cursor = 0;
 
-      if ((new_cursor = dir_parse_directive(cursor, &dir)) != cursor) {
+      if ((new_cursor = dir_parse_directive(cursor, &dir, &error)) != cursor) {
         cursor = new_cursor;
         *line_info_out = li_directive(dir);
+      }
+      if (error != 0) {
+        state = s_skip_line;
+        *line_info_out = li_error(error);
+        continue;
       }
       state = s_default;
       continue;
@@ -101,7 +107,7 @@ const char* parse_line(const char* cursor, parse_ctx* ctx, line_info* line_info_
 
     if (state == s_instruction) {
       instruction ins;
-      error_parse_op error;
+      error_parse error;
       const char* new_cursor;
       if ((new_cursor = ins_parse_instruction(cursor, &ins, &error)) != cursor) {
         cursor = new_cursor;
@@ -123,7 +129,7 @@ void parser_print_label(const char* label) {
   printf("Label {name: %s}\n", label);
 }
 
-void parser_print_error(error_parse_op code) {
+void parser_print_error(error_parse code) {
   printf("Error {\n");
   printf("\tcode: %d\n", code);
   printf("\tmsg: %s\n", parser_errors_str(code));
