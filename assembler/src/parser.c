@@ -35,6 +35,16 @@ void parser_print_directive(directive dir) {
         printf("Directive {type: org, addr: %x}\n", dir.data.org.addr);
         break;
       }
+    case dt_byte:
+      {
+        printf("Directive {type: byte, bytes_count: %d, bytes: [", dir.data.byte.bytes_count);
+        for (int i = 0; i < dir.data.byte.bytes_count; i++) {
+          printf("%x", dir.data.byte.bytes[i]);
+          if (i != dir.data.byte.bytes_count - 1) printf(", ");
+        }
+        printf("]}\n");
+        // assert(0 && "dt_byte print not implemented");
+      }
   }
 }
 
