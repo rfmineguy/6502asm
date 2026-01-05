@@ -13,6 +13,7 @@ SOURCES := $(SRC)/fileutil.c\
            $(SRC)/parser_directive.c\
            $(SRC)/parser_instruction.c\
            $(SRC)/parser_operand.c\
+           $(SRC)/parser_label.c\
            $(SRC)/parser_util.c\
            $(SRC)/parser_errors.c
 
@@ -23,7 +24,7 @@ DRIVER  := $(THIS_DIR)/driver.c
 
 OBJS    := $(patsubst $(SRC)/%.c, $(OBJ_OUT)/%.c.o, $(SOURCES))
 
-CFLAGS  := -ggdb
+CFLAGS  := -ggdb -Wall -Werror -pedantic -std=c11
 
 .PHONY: always clean
 .PHONY: build

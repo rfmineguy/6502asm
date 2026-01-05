@@ -5,6 +5,10 @@
 
 #define _bytes(...) {__VA_ARGS__}
 
+// maximum number of comma separated bytes allowed per 
+//   byte directive
+#define MAX_BYTES_IN_BYTE_DIR 100
+
 #define li_directive(directive_)\
   (line_info_element){\
     .type = lt_directive,\
@@ -61,6 +65,7 @@ typedef struct {
 
 typedef enum {
   dt_org,
+  dt_byte,
 } directive_type;
 
 typedef struct {
@@ -69,6 +74,10 @@ typedef struct {
     struct {
       uint16_t addr;
     } org;
+    struct {
+      uint8_t bytes[MAX_BYTES_IN_BYTE_DIR];
+      int bytes_count;
+    } byte;
   } data;
 } directive;
 

@@ -12,6 +12,7 @@
  */
 const char* dir_parse_org(const char* cursor, uint16_t* addr_out, error_parse* error);
 
+const char* dir_parse_byte(const char* cursor, uint8_t bytes_out[MAX_BYTES_IN_BYTE_DIR], int* bytes_count_out, error_parse* error);
 
 const char* dir_parse_directive(const char* cursor, directive* dir_out, error_parse* error);
 
