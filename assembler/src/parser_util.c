@@ -50,3 +50,10 @@ bool util_isnewline(const char* s, int* len) {
   }
   return false;
 }
+
+int util_predlen(const char *cursor, int(*predicate)(int)) {
+  assert(predicate && "Must call predlen with non null predicated");
+  const char* orig = cursor;
+  while (*cursor && predicate(*cursor)) cursor++;
+  return cursor - orig;
+}

@@ -1,5 +1,6 @@
 #include "tests.h"
 #include "parser_util.h"
+#include <ctype.h>      /* isdigit */
 
 typedef struct {
   bool end;
@@ -17,6 +18,14 @@ typedef struct {
     int len;
   } expected;
 } alphalen_struct;
+
+typedef struct {
+  const char* input;
+  int(*predicate)(int);
+  struct {
+    int len;
+  } expected;
+} predlen_struct;
 
 MunitResult parse_util_parse_number_test(const MunitParameter *params, void *fixture) {
   parse_number_struct tests[] = {
@@ -90,6 +99,27 @@ MunitResult parse_util_isnewline_test(const MunitParameter *params, void *fixtur
     buff[0] = c;
     buff[1] = 0;
     munit_assert_false(util_isnewline(buff, &len));
+  }
+  return MUNIT_OK;
+}
+
+static int pred_label(int ch) {
+  return ch == '_' || isalpha(ch);
+}
+
+MunitResult parse_util_predlen_test(const MunitParameter *params, void *fixture) {
+  predlen_struct tests[] = {
+    { "5348614", isdigit,    { 7 } },
+    { "53",      isdigit,    { 2 } },
+    { "hello",   isalpha,    { 5 } },
+    { "hel245ad",isalnum,    { 8 } },
+    { "hel_ad",  pred_label, { 6 } },
+    NULL
+  };
+
+  for (int i = 0; tests[i].input != NULL; i++) {
+    predlen_struct test = tests[i];
+    munit_assert_int(test.expected.len, ==, util_predlen(test.input, test.predicate));
   }
   return MUNIT_OK;
 }

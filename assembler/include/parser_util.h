@@ -31,4 +31,9 @@ int         util_alphalen(const char* cursor);
  */
 bool        util_isnewline(const char* s, int* len);
 
+/*
+ * Desc:    count how many characters match the predicate
+ */
+int         util_predlen(const char* cursor, int(*predicate)(int c));
+
 #endif
