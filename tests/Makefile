@@ -22,7 +22,6 @@ TESTS_SOURCES := $(THIS_DIR)/src/parser_directive.c\
 
 tests_always:
 	mkdir -p $(OUT)
-	$(file test.txt,$(test1txt))
 
 $(OUT)/test: $(TESTS_SOURCES) | tests_always $(OUT)/lib65asm.a $(TESTFILES)
 	$(CC) -o $@ $^ $(INCLUDE) -L$(OUT) -l65asm -DGIT_ROOT_BASELINE="\"$(ROOT_MAKEFILE)\""
