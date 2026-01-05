@@ -6,7 +6,7 @@
 #define _bytes(...) {__VA_ARGS__}
 
 #define li_directive(directive_)\
-  (line_info){\
+  (line_info_element){\
     .type = lt_directive,\
     .line_number = ctx->line_number,\
     .column_number = ctx->column_number,\
@@ -15,7 +15,7 @@
   }
 
 #define li_instruction(instruction_)\
-  (line_info){\
+  (line_info_element){\
     .type = lt_instruction,\
     .line_number = ctx->line_number,\
     .column_number = ctx->column_number,\
@@ -24,7 +24,7 @@
   }
 
 #define li_error(error_)\
-  (line_info){\
+  (line_info_element){\
     .type = lt_error,\
     .line_number = ctx->line_number,\
     .column_number = ctx->column_number,\
@@ -69,18 +69,23 @@ typedef enum {
   lt_directive,
   lt_label,
   lt_error
-} line_type;
+} line_info_type;
 
 typedef struct {
-  line_type type;
   int line_number, column_number;
   const char* filename;
+  line_info_type type;
   union {
     instruction instruction;
     directive directive;
     const char* label;
     error_parse error;
   } data;
+} line_info_element;
+
+typedef struct {
+  line_info_element data[10];
+  int data_count;
 } line_info;
 
 typedef struct {

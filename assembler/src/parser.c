@@ -94,11 +94,11 @@ const char* parse_line(const char* cursor, parse_ctx* ctx, line_info* line_info_
 
       if ((new_cursor = dir_parse_directive(cursor, &dir, &error)) != cursor) {
         cursor = new_cursor;
-        *line_info_out = li_directive(dir);
+        line_info_out->data[line_info_out->data_count++] = li_directive(dir);
       }
       if (error != 0) {
         state = s_skip_line;
-        *line_info_out = li_error(error);
+        line_info_out->data[line_info_out->data_count++] = li_error(error);
         continue;
       }
       state = s_default;
@@ -111,11 +111,11 @@ const char* parse_line(const char* cursor, parse_ctx* ctx, line_info* line_info_
       const char* new_cursor;
       if ((new_cursor = ins_parse_instruction(cursor, &ins, &error)) != cursor) {
         cursor = new_cursor;
-        *line_info_out = li_instruction(ins);
+        line_info_out->data[line_info_out->data_count++] = li_instruction(ins);
       }
       if (error != 0) {
         state = s_skip_line;
-        *line_info_out = li_error(error);
+        line_info_out->data[line_info_out->data_count++] = li_error(error);
         continue;
       }
       state = s_default;
@@ -136,22 +136,28 @@ void parser_print_error(error_parse code) {
   printf("}\n");
 }
 
-void parser_print_lineinfo(line_info info) {
-  switch (info.type) {
+void parser_print_line_info_element(line_info_element el) {
+  switch (el.type) {
     case lt_none:
       printf("LineInfo: none\n");
       break;
     case lt_instruction:
-      parser_print_instruction(info.data.instruction);
+      parser_print_instruction(el.data.instruction);
       break;
     case lt_directive:
-      parser_print_directive(info.data.directive);
+      parser_print_directive(el.data.directive);
       break;
     case lt_label:
-      parser_print_label(info.data.label);
+      parser_print_label(el.data.label);
       break;
     case lt_error:
-      parser_print_error(info.data.error);
+      parser_print_error(el.data.error);
       break;
+  }
+}
+
+void parser_print_lineinfo(line_info info) {
+  for (int i = 0; i < info.data_count; i++) {
+    parser_print_line_info_element(info.data[i]);
   }
 }
