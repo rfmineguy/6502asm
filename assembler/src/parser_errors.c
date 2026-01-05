@@ -1,4 +1,5 @@
 #include "parser_errors.h"
+#include <assert.h>
 
 const char* parser_errors_str(error_parse code) {
   switch (code) {
@@ -29,4 +30,5 @@ const char* parser_errors_str(error_parse code) {
     case ERROR_PARSE_EXPECTED_COLON:
       return "Expected ':'";
   }
+  assert(0 && "Unreachable");
 }
