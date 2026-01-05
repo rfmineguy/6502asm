@@ -32,3 +32,6 @@ $(for i in {1..500}; do
 done)
 EOL
 }
+
+# Entry
+gentestfiles $@

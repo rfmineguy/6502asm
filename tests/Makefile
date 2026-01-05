@@ -27,4 +27,4 @@ $(OUT)/test: $(TESTS_SOURCES) | tests_always $(OUT)/lib65asm.a $(TESTFILES)
 	$(CC) -o $@ $^ $(INCLUDE) -L$(OUT) -l65asm -DGIT_ROOT_BASELINE="\"$(ROOT_MAKEFILE)\""
 
 $(TESTFILES):
-	./tests/genfiles.sh && gentestfiles $(TESTFILE_DIR)
+	./tests/genfiles.sh $(TESTFILE_DIR)
