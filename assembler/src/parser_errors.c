@@ -22,5 +22,11 @@ const char* parser_errors_str(error_parse code) {
       return "Expected '#'";
     case ERROR_PARSE_BYTE_DIR_TOO_LONG:
       return "Byte sequence too long";
+    case ERROR_PARSE_EXPECTED_NAME:
+      return "Expected name";
+    case ERROR_PARSE_UNEXPECTED_NAME:
+      return "Unexpected name";
+    case ERROR_PARSE_EXPECTED_COLON:
+      return "Expected ':'";
   }
 }

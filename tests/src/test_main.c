@@ -38,6 +38,12 @@ MunitTest parse_instruction_ora[] = {
   {NULL, NULL, NULL, 0, MUNIT_TEST_OPTION_NONE},
 };
 
+MunitTest parse_label[] = {
+  {"/named",    parse_label_named_test,   NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {"/unnamed",  parse_label_unnamed_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
+  {NULL, NULL, NULL, 0, MUNIT_TEST_OPTION_NONE},
+};
+
 MunitSuite parse_instruction[] = {
   {"/ora",       parse_instruction_ora, NULL, 1, MUNIT_SUITE_OPTION_NONE },
   {NULL, NULL, NULL, 0, MUNIT_SUITE_OPTION_NONE},
@@ -48,6 +54,7 @@ MunitSuite parse_suite[] = {
   {"/operand",     parse_operand,   NULL, 1, MUNIT_SUITE_OPTION_NONE },
   {"/directive",   parse_directive, NULL, 1, MUNIT_SUITE_OPTION_NONE },
   {"/instruction", NULL, parse_instruction, 1, MUNIT_SUITE_OPTION_NONE },
+  {"/label",       parse_label, NULL, 1, MUNIT_SUITE_OPTION_NONE },
   {NULL, NULL, NULL, 0, MUNIT_SUITE_OPTION_NONE},
 };
 

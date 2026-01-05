@@ -14,6 +14,10 @@ typedef enum {
   ERROR_PARSE_EXPECTED_HASH       = 8,
 
   ERROR_PARSE_BYTE_DIR_TOO_LONG   = 100,
+
+  ERROR_PARSE_EXPECTED_NAME       = 200,
+  ERROR_PARSE_UNEXPECTED_NAME     = 201,
+  ERROR_PARSE_EXPECTED_COLON      = 202,
 } error_parse;
 
 const char* parser_errors_str(error_parse code);

@@ -28,4 +28,7 @@ MunitResult parse_instruction_ora_absolute_test (const MunitParameter *params, v
 MunitResult parse_directive_org_test(const MunitParameter *params, void *fixture);
 MunitResult parse_directive_byte_test(const MunitParameter *params, void *fixture);
 
+MunitResult parse_label_named_test(const MunitParameter *params, void *fixture);
+MunitResult parse_label_unnamed_test(const MunitParameter *params, void *fixture);
+
 MunitResult parser_test(const MunitParameter *params, void *fixture);

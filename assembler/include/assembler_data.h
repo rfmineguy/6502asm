@@ -23,6 +23,15 @@
     .data.instruction = instruction_,\
   }
 
+#define li_label(label_)\
+  (line_info_element){\
+    .type = lt_label,\
+    .line_number = ctx->line_number,\
+    .column_number = ctx->column_number,\
+    .filename = "",\
+    .data.label = label_,\
+  }
+
 #define li_error(error_)\
   (line_info_element){\
     .type = lt_error,\
@@ -64,6 +73,22 @@ typedef struct {
 } directive;
 
 typedef enum {
+  lt_named,
+  lt_unnamed,
+} label_type;
+
+typedef struct {
+  label_type type;
+  union {
+    struct {
+      const char* name;
+      int length;
+    } named;
+    /* no data for the unnamed label */
+  } data;
+} label;
+
+typedef enum {
   lt_none,
   lt_instruction,
   lt_directive,
@@ -78,7 +103,7 @@ typedef struct {
   union {
     instruction instruction;
     directive directive;
-    const char* label;
+    label label;
     error_parse error;
   } data;
 } line_info_element;

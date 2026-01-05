@@ -11,6 +11,7 @@
 #include "parser_directive.h"
 #include "parser_operand.h"
 #include "parser_instruction.h"
+#include "parser_label.h"
 #include "parser_errors.h"
 
 void parser_print_instruction(instruction ins) {
@@ -43,6 +44,7 @@ typedef enum state {
   s_unnamed_label,
   s_instruction,
   s_skip_line,
+  s_label,
   s_end,
 } state;
 
@@ -64,9 +66,9 @@ const char* parse_line(const char* cursor, parse_ctx* ctx, line_info* line_info_
       }
       if (*cursor == '.')             state = s_directive;
       else if (*cursor == ':')        state = s_unnamed_label;
-      else if (util_alphalen(cursor) == 3) state = s_instruction;
       else if (*cursor == ';')        state = s_skip_line;
-      else if (*cursor == ' ')        { cursor++; continue; }
+      else if (util_alphalen(cursor) == 3) state = s_instruction;
+      else if (isalpha(*cursor))      state = s_label;
     }
 
     if (state == s_end) break;
@@ -83,6 +85,42 @@ const char* parse_line(const char* cursor, parse_ctx* ctx, line_info* line_info_
         else cursor ++;
       }
       state = s_end;
+      continue;
+    }
+
+    if (state == s_unnamed_label) {
+      label label;
+      error_parse error;
+      const char* new_cursor = 0;
+
+      if ((new_cursor = label_parse_unnamed_label(cursor, &label, &error)) != cursor) {
+        cursor = new_cursor;
+        label.type = lt_unnamed;
+        line_info_out->data[line_info_out->data_count++] = li_label(label);
+      }
+      if (error == ERROR_PARSE_EXPECTED_COLON) state = s_label;
+      else if (error != ERROR_PARSE_NONE) {
+        state = s_skip_line;
+      }
+      else state = s_default;
+    }
+
+    if (state == s_label) {
+      label label;
+      error_parse error;
+      const char* new_cursor = 0;
+
+      if ((new_cursor = label_parse_named_label(cursor, &label, &error)) != cursor) {
+        cursor = new_cursor;
+        label.type = lt_named;
+        line_info_out->data[line_info_out->data_count++] = li_label(label);
+      }
+      if (error != 0) {
+        state = s_skip_line;
+        line_info_out->data[line_info_out->data_count++] = li_error(error);
+        continue;
+      }
+      else state = s_default;
       continue;
     }
 
@@ -125,8 +163,15 @@ const char* parse_line(const char* cursor, parse_ctx* ctx, line_info* line_info_
   return cursor + newlinelen;
 }
 
-void parser_print_label(const char* label) {
-  printf("Label {name: %s}\n", label);
+void parser_print_label(label label) {
+  switch (label.type) {
+    case lt_named:
+      printf("Label {name: %.*s}\n", label.data.named.length, label.data.named.name);
+      break;
+    case lt_unnamed:
+      printf("Label {<unnamed>}\n");
+      break;
+  }
 }
 
 void parser_print_error(error_parse code) {
