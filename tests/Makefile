@@ -15,6 +15,7 @@ TESTS_SOURCES := $(THIS_DIR)/src/parser_directive.c\
                  $(THIS_DIR)/src/parser_operand.c\
                  $(THIS_DIR)/src/parser_util.c\
                  $(THIS_DIR)/src/parser_instruction_ora.c\
+                 $(THIS_DIR)/src/parser_instruction_pha.c\
                  $(THIS_DIR)/src/parser_label.c\
                  $(THIS_DIR)/src/fileutil.c\
                  $(THIS_DIR)/src/munit.c\
