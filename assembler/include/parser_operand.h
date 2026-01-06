@@ -2,6 +2,9 @@
 #define OPERAND_PARSER_H
 #include "parser_errors.h"
 
+// accumulator
+const char* parse_op_accumulator(const char* cursor, error_parse* error);
+
 // #immediate
 const char* parse_op_immediate(const char* cursor, long* val, error_parse* error);
 

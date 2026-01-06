@@ -3,9 +3,26 @@
 #include "parser_util.h"
 #include <limits.h>
 #include <stdio.h>
+#include <assert.h>
+
+// accumulator
+const char* parse_op_accumulator(const char* cursor, error_parse* error) {
+  assert(error && "error must be non null");
+  const char* orig = cursor;
+
+  while (*cursor == ' ') cursor++;
+  if (*cursor != 'A') {
+    *error = ERROR_PARSE_EXPECTED_ACCUMULATOR;
+    return orig;
+  }
+  *error = ERROR_PARSE_NONE;
+  return cursor + 1;
+}
 
 // immediate
 const char* parse_op_immediate(const char* cursor, long* val, error_parse* error) {
+  assert(val && "val must be non null");
+  assert(error && "error must be non null");
   const char* orig = cursor;
 
   while (*cursor == ' ') cursor++;
@@ -32,6 +49,8 @@ const char* parse_op_immediate(const char* cursor, long* val, error_parse* error
 
 // zp
 const char* parse_op_zp(const char* cursor, long* val, error_parse* error) {
+  assert(val && "val must be non null");
+  assert(error && "error must be non null");
   const char* orig = cursor;
 
   while (*cursor == ' ') cursor++;
@@ -52,6 +71,8 @@ const char* parse_op_zp(const char* cursor, long* val, error_parse* error) {
 
 // zp,X
 const char* parse_op_zpx(const char* cursor, long* val, error_parse* error) {
+  assert(val && "val must be non null");
+  assert(error && "error must be non null");
   const char* orig = cursor;
 
   while (*cursor == ' ') cursor++;
@@ -86,6 +107,8 @@ const char* parse_op_zpx(const char* cursor, long* val, error_parse* error) {
 
 // absolute
 const char* parse_op_absolute(const char* cursor, long* val, error_parse* error) {
+  assert(val && "val must be non null");
+  assert(error && "error must be non null");
   const char* orig = cursor;
 
   while (*cursor == ' ') cursor++;
@@ -106,6 +129,8 @@ const char* parse_op_absolute(const char* cursor, long* val, error_parse* error)
 
 // absolute, X
 const char* parse_op_absolutex(const char* cursor, long* val, error_parse* error) {
+  assert(val && "val must be non null");
+  assert(error && "error must be non null");
   const char* orig = cursor;
 
   while (*cursor == ' ') cursor++;
@@ -137,6 +162,8 @@ const char* parse_op_absolutex(const char* cursor, long* val, error_parse* error
 
 // absolute, Y
 const char* parse_op_absolutey(const char* cursor, long* val, error_parse* error) {
+  assert(val && "val must be non null");
+  assert(error && "error must be non null");
   const char* orig = cursor;
 
   while (*cursor == ' ') cursor++;
@@ -168,6 +195,8 @@ const char* parse_op_absolutey(const char* cursor, long* val, error_parse* error
 
 // (indirect, X)
 const char* parse_op_indirectx(const char* cursor, long* val, error_parse* error) {
+  assert(val && "val must be non null");
+  assert(error && "error must be non null");
   const char* orig = cursor;
 
   while (*cursor == ' ') cursor++;
@@ -212,6 +241,8 @@ const char* parse_op_indirectx(const char* cursor, long* val, error_parse* error
 
 // (indirect), Y
 const char* parse_op_indirecty(const char* cursor, long* val, error_parse* error) {
+  assert(val && "val must be non null");
+  assert(error && "error must be non null");
   const char* orig = cursor;
 
   while (*cursor == ' ') cursor++;
