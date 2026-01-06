@@ -125,7 +125,7 @@ const char* parse_line(const char* cursor, parse_ctx* ctx, line_info* line_info_
         label.type = lt_named;
         line_info_out->data[line_info_out->data_count++] = li_label(label);
       }
-      if (error != 0) {
+      if (error != ERROR_PARSE_NONE) {
         state = s_skip_line;
         line_info_out->data[line_info_out->data_count++] = li_error(error);
         continue;
@@ -144,7 +144,7 @@ const char* parse_line(const char* cursor, parse_ctx* ctx, line_info* line_info_
         cursor = new_cursor;
         line_info_out->data[line_info_out->data_count++] = li_directive(dir);
       }
-      if (error != 0) {
+      if (error != ERROR_PARSE_NONE) {
         state = s_skip_line;
         line_info_out->data[line_info_out->data_count++] = li_error(error);
         continue;
@@ -161,7 +161,7 @@ const char* parse_line(const char* cursor, parse_ctx* ctx, line_info* line_info_
         cursor = new_cursor;
         line_info_out->data[line_info_out->data_count++] = li_instruction(ins);
       }
-      if (error != 0) {
+      if (error != ERROR_PARSE_NONE) {
         state = s_skip_line;
         line_info_out->data[line_info_out->data_count++] = li_error(error);
         continue;

@@ -43,7 +43,7 @@ MunitResult parse_label_named_test(const MunitParameter *params, void *fixture) 
     munit_logf(MUNIT_LOG_INFO, "%s", test.input);
     const char* new_cursor = label_parse_named_label(test.input, &val, &error);
     if (test.expected.ok) {
-      munit_assert_int(error, ==, 0);
+      munit_assert_int(error, ==, ERROR_PARSE_NONE);
       munit_assert_ptr_not_equal(tests[i].input, new_cursor);
       munit_assert_int(val.type, ==, lt_named);
       munit_assert_int(val.data.named.length, ==, tests[i].expected.length);
