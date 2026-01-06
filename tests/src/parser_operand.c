@@ -12,6 +12,31 @@ typedef struct {
   } expected;
 } parse_operand_struct;
 
+MunitResult parse_operand_accumulator_test(const MunitParameter *params, void *fixture) {
+  parse_operand_struct tests[] = {
+    { "A",      { true,  0 , ERROR_PARSE_NONE } },
+    { "A, 3",   { true,  0 , ERROR_PARSE_NONE } },
+    { "B",      { false, 0 , ERROR_PARSE_EXPECTED_ACCUMULATOR } },
+    { "#4",     { false, 0 , ERROR_PARSE_EXPECTED_ACCUMULATOR } },
+    { NULL }
+  };
+
+  for (int i = 0; tests[i].input; i++) {
+    parse_operand_struct test = tests[i];
+    munit_logf(MUNIT_LOG_INFO, "in: %s", test.input);
+    long val;
+    error_parse error;
+    const char* new_cursor = parse_op_accumulator(test.input, &error);
+    munit_assert_int(error, ==, test.expected.error);
+    if (test.expected.ok) {
+      munit_assert_ptr_not_equal(tests[i].input, new_cursor);
+    }
+    else
+      munit_assert_ptr_equal(tests[i].input, new_cursor);
+  }
+  return MUNIT_OK;
+}
+
 MunitResult parse_operand_immediate_test(const MunitParameter *params, void *fixture) {
   parse_operand_struct tests[] = {
     { "#0",     { true,  0 , ERROR_PARSE_NONE } },
@@ -34,8 +59,8 @@ MunitResult parse_operand_immediate_test(const MunitParameter *params, void *fix
     long val;
     error_parse error;
     const char* new_cursor = parse_op_immediate(test.input, &val, &error);
+    munit_assert_int(error, ==, test.expected.error);
     if (test.expected.ok) {
-      munit_assert_int(error, ==, 0);
       munit_assert_ptr_not_equal(tests[i].input, new_cursor);
       munit_assert_int(val, ==, tests[i].expected.val);
     }

@@ -9,6 +9,7 @@ MunitTest parse_util[] = {
 };
 
 MunitTest parse_operand[] = {
+  {"/acc",       parse_operand_accumulator_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
   {"/immediate", parse_operand_immediate_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
   {"/zp",        parse_operand_zp_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
   {"/zpx",       parse_operand_zpx_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
