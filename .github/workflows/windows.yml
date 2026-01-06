@@ -1,4 +1,4 @@
-name: Test Linux
+name: Test Windows
 on:
   push:
     branches:
@@ -11,8 +11,8 @@ permissions:
   contents: write
 
 jobs:
-  configure-build-and-package-ubuntu:
-    runs-on: ubuntu-latest
+  configure-build-and-package-macos:
+    runs-on: windows-2025
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -26,3 +26,4 @@ jobs:
         run: |
           ./out/test
         shell: bash
+

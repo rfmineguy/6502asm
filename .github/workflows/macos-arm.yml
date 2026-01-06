@@ -1,4 +1,4 @@
-name: Test Linux
+name: Test MacOS Arm
 on:
   push:
     branches:
@@ -11,8 +11,8 @@ permissions:
   contents: write
 
 jobs:
-  configure-build-and-package-ubuntu:
-    runs-on: ubuntu-latest
+  configure-build-and-package-macos:
+    runs-on: macos-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
