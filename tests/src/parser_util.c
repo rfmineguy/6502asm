@@ -9,6 +9,7 @@ typedef struct {
     bool ok;
     int number;
     const char* remaining;
+    error_parse error;
   } expected;
 } parse_number_struct;
 
@@ -29,17 +30,18 @@ typedef struct {
 
 MunitResult parse_util_parse_number_test(const MunitParameter *params, void *fixture) {
   parse_number_struct tests[] = {
-    {false, "52746daf",     { true, 52746, "daf" } },
-    {false, "01afd",        { true, 1, "afd" } },
-    {false, "00005afd",     { true, 5, "afd" } },
-    {false, "0afd",         { true, 0, "afd" } },
-    {false, "000afd",       { true, 0, "afd" } },
-    {false, "213afajfa fl", { true, 213, "afajfa fl" } },
-    {false, "$4214asfdshy", { true, 0x4214a, "sfdshy" } },
-    {false, "asfdshy",      { false, 0, "asfdshy" } },
-    {false, "#$1372asfdshy",{ false, 0, "#$1372asfdshy" } },
-    {false, "",             { false, 0, "" } },
-    {false, 0,              { false, 0, 0 } },
+    {false, "52746daf",     { true , 52746,   "daf"          , ERROR_PARSE_NONE } },
+    {false, "01afd",        { true , 1,       "afd"          , ERROR_PARSE_NONE } },
+    {false, "00005afd",     { true , 5,       "afd"          , ERROR_PARSE_NONE } },
+    {false, "0afd",         { true , 0,       "afd"          , ERROR_PARSE_NONE } },
+    {false, "000afd",       { true , 0,       "afd"          , ERROR_PARSE_NONE } },
+    {false, "213afajfa fl", { true , 213,     "afajfa fl"    , ERROR_PARSE_NONE } },
+    {false, "$4214asfdshy", { true , 0x4214a, "sfdshy"       , ERROR_PARSE_NONE } },
+    {false, "asfdshy",      { false, 0,       "asfdshy"      , ERROR_PARSE_EXPECTED_NUMBER } },
+    {false, "#$1372asfdshy",{ false, 0,       "#$1372asfdshy", ERROR_PARSE_EXPECTED_NUMBER } },
+    {false, "",             { false, 0,       ""             , ERROR_PARSE_EXPECTED_NUMBER } },
+    {false, "$",            { false, 0,       ""             , ERROR_PARSE_EXPECTED_NUMBER } },
+    {false, 0,              { false, 0,       0              , ERROR_PARSE_NONE } },
     {true,  NULL, 0}
   };
 
@@ -49,7 +51,8 @@ MunitResult parse_util_parse_number_test(const MunitParameter *params, void *fix
     // munit_logf(MUNIT_LOG_INFO, "input: %s", s);
 
     long num;
-    s = util_parse_number(s, &num);
+    error_parse error;
+    s = util_parse_number(s, &num, &error);
     if (test.expected.ok) {
       munit_assert_ptr_not_null(s);
       munit_assert_ptr_not_equal(s, test.input);

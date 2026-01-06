@@ -1,6 +1,7 @@
 #ifndef PARSER_UTIL_H
 #define PARSER_UTIL_H
 #include <stdbool.h>
+#include "parser_errors.h"
 
 /*
  * Desc:   begin parsing a number a the cursor pointer
@@ -11,7 +12,7 @@
  *    Returns cursor if no number was able to be parsed
  *    Returns the character after the number if a number was parsed
  */
-const char* util_parse_number(const char*, long*);
+const char* util_parse_number(const char*, long*, error_parse*);
 
 /*
  * Desc:    count how many consecutive alpha characters there are starting at

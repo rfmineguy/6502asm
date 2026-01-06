@@ -1,5 +1,6 @@
 #include "parser_errors.h"
 #include <assert.h>
+#include <stdio.h>
 
 const char* parser_errors_str(error_parse code) {
   switch (code) {
@@ -21,6 +22,8 @@ const char* parser_errors_str(error_parse code) {
       return "Expected ')'";
     case ERROR_PARSE_EXPECTED_HASH:
       return "Expected '#'";
+    case ERROR_PARSE_NULL_CURSOR:
+      return "Null cursor";
     case ERROR_PARSE_BYTE_DIR_TOO_LONG:
       return "Byte sequence too long";
     case ERROR_PARSE_EXPECTED_NAME:
@@ -30,5 +33,6 @@ const char* parser_errors_str(error_parse code) {
     case ERROR_PARSE_EXPECTED_COLON:
       return "Expected ':'";
   }
+  fprintf(stderr, "code: %d\n", code);
   assert(0 && "Unreachable");
 }

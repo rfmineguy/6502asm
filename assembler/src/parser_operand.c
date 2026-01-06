@@ -16,9 +16,8 @@ const char* parse_op_immediate(const char* cursor, long* val, error_parse* error
   cursor++;
 
   const char* new_cursor;
-  if ((new_cursor = util_parse_number(cursor, val)) == cursor) {
+  if ((new_cursor = util_parse_number(cursor, val, error)) == cursor) {
     fprintf(stderr, "Expected number, got %c\n", *cursor);
-    *error = ERROR_PARSE_EXPECTED_NUMBER;
     return orig;
   }
 
@@ -38,8 +37,7 @@ const char* parse_op_zp(const char* cursor, long* val, error_parse* error) {
   while (*cursor == ' ') cursor++;
 
   const char* new_cursor;
-  if ((new_cursor = util_parse_number(cursor, val)) == cursor) {
-    *error = ERROR_PARSE_EXPECTED_NUMBER;
+  if ((new_cursor = util_parse_number(cursor, val, error)) == cursor) {
     return orig;
   }
   cursor = new_cursor;
@@ -59,8 +57,7 @@ const char* parse_op_zpx(const char* cursor, long* val, error_parse* error) {
   while (*cursor == ' ') cursor++;
   
   const char* new_cursor;
-  if ((new_cursor = util_parse_number(cursor, val)) == cursor) {
-    *error = ERROR_PARSE_EXPECTED_NUMBER;
+  if ((new_cursor = util_parse_number(cursor, val, error)) == cursor) {
     return orig;
   }
   cursor = new_cursor;
@@ -94,8 +91,7 @@ const char* parse_op_absolute(const char* cursor, long* val, error_parse* error)
   while (*cursor == ' ') cursor++;
   
   const char* new_cursor;
-  if ((new_cursor = util_parse_number(cursor, val)) == cursor) {
-    *error = ERROR_PARSE_EXPECTED_NUMBER;
+  if ((new_cursor = util_parse_number(cursor, val, error)) == cursor) {
     return orig;
   }
   cursor = new_cursor;
@@ -114,8 +110,7 @@ const char* parse_op_absolutex(const char* cursor, long* val, error_parse* error
 
   while (*cursor == ' ') cursor++;
   const char* new_cursor;
-  if ((new_cursor = util_parse_number(cursor, val)) == cursor) {
-    *error = ERROR_PARSE_EXPECTED_NUMBER;
+  if ((new_cursor = util_parse_number(cursor, val, error)) == cursor) {
     return orig;
   }
   cursor = new_cursor;
@@ -146,8 +141,7 @@ const char* parse_op_absolutey(const char* cursor, long* val, error_parse* error
 
   while (*cursor == ' ') cursor++;
   const char* new_cursor;
-  if ((new_cursor = util_parse_number(cursor, val)) == cursor) {
-    *error = ERROR_PARSE_EXPECTED_NUMBER;
+  if ((new_cursor = util_parse_number(cursor, val, error)) == cursor) {
     return orig;
   }
   cursor = new_cursor;
@@ -183,8 +177,7 @@ const char* parse_op_indirectx(const char* cursor, long* val, error_parse* error
   }
   cursor++;
   const char* new_cursor;
-  if ((new_cursor = util_parse_number(cursor, val)) == cursor) {
-    *error = ERROR_PARSE_EXPECTED_NUMBER;
+  if ((new_cursor = util_parse_number(cursor, val, error)) == cursor) {
     return orig;
   }
   cursor = new_cursor;
@@ -228,8 +221,7 @@ const char* parse_op_indirecty(const char* cursor, long* val, error_parse* error
   }
   cursor++;
   const char* new_cursor;
-  if ((new_cursor = util_parse_number(cursor, val)) == cursor) {
-    *error = ERROR_PARSE_EXPECTED_NUMBER;
+  if ((new_cursor = util_parse_number(cursor, val, error)) == cursor) {
     return orig;
   }
   cursor = new_cursor;

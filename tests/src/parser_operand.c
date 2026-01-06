@@ -58,6 +58,7 @@ MunitResult parse_operand_zp_test(const MunitParameter *params, void *fixture) {
     { "$00080",  { true,  0x80, ERROR_PARSE_NONE                } },
     { "$000256", { false, -1  , ERROR_PARSE_NUMBER_OUT_OF_RANGE } },
     { "$100256", { false, -1  , ERROR_PARSE_NUMBER_OUT_OF_RANGE } },
+    { "$",       { false, -1  , ERROR_PARSE_EXPECTED_NUMBER     } },
     { NULL }
   };
 

@@ -14,10 +14,9 @@ const char* dir_parse_org(const char* cursor, uint16_t* addr_out, error_parse* e
   while (cursor && *cursor == ' ') cursor++;
   // parse number
   long val;
-  const char* new_cursor = util_parse_number(cursor, &val);
+  const char* new_cursor = util_parse_number(cursor, &val, error);
   if (new_cursor == cursor) {
     fprintf(stderr, "Failed to read number in org\n");
-    *error = ERROR_PARSE_EXPECTED_NUMBER;
     return orig;
   }
   if (val < 0 || val > SHRT_MAX) {
@@ -51,9 +50,8 @@ const char* dir_parse_byte(const char* cursor, uint8_t bytes_out[MAX_BYTES_IN_BY
       // is_decimal = true;
       cursor++;
     }
-    new_cursor = util_parse_number(cursor, &val);
+    new_cursor = util_parse_number(cursor, &val, error);
     if (new_cursor == cursor) {
-      *error = ERROR_PARSE_EXPECTED_NUMBER;
       return orig;
     }
     if (val < 0 || val > UCHAR_MAX) {

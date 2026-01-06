@@ -6,11 +6,23 @@
 #include <stdio.h>
 #include <string.h>
 
-const char* util_parse_number(const char* cursor, long* num_out) {
+static int ishex(char c) {
+    c = tolower(c);
+    return isdigit(c) || (c >= 'a' && c <= 'f');
+}
+
+const char* util_parse_number(const char* cursor, long* num_out, error_parse* error) {
   assert(num_out && "Must call parse_number with non null num_out");
+  assert(error && "Must call parse_number with non null error");
   const char* orig = cursor;
-  if (cursor == NULL) return NULL;
-  if (*cursor == 0) return orig;
+  if (cursor == NULL) {
+      *error = ERROR_PARSE_NULL_CURSOR;
+      return NULL;
+  }
+  if (*cursor == 0) {
+      *error = ERROR_PARSE_EXPECTED_NUMBER;
+      return orig;
+  }
   int base = 10;
   if (*cursor == '$') {
     base = 16;
@@ -18,9 +30,17 @@ const char* util_parse_number(const char* cursor, long* num_out) {
   }
   char* end;
 
+  if (base == 10 && !isdigit(*cursor)) {
+      *error = ERROR_PARSE_EXPECTED_NUMBER;
+      return orig;
+  }
+  if (base == 16 && !ishex(*cursor)) {
+      *error = ERROR_PARSE_EXPECTED_NUMBER;
+      return orig;
+  }
+
   // NOTE: Is this ok to do? The idea is that it is setting errno to something that strtol
   //  will never set it to, thus allowing me to accurately judge if strtol set errno internally
-  errno = 0;
   *num_out = strtol(cursor, &end, base);
   if (*num_out == 0) {
     if (errno == EINVAL || errno == ERANGE) {
@@ -29,6 +49,7 @@ const char* util_parse_number(const char* cursor, long* num_out) {
       return orig;
     }
   }
+  errno = ERROR_PARSE_NONE;
   return end;
 }
 

@@ -31,6 +31,7 @@ MunitResult parse_directive_org_test(const MunitParameter *params, void *fixture
 
   for (int i = 0; tests[i].input; i++) {
     parse_operand_struct test = tests[i];
+    munit_logf(MUNIT_LOG_INFO, "%s", test.input);
     directive val;
     error_parse error;
     const char* new_cursor = dir_parse_directive(test.input, &val, &error);
