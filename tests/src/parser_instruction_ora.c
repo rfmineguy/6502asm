@@ -1,6 +1,6 @@
 #include "tests.h"
-#include "parser_instruction.h"
 #include "parser_errors.h"
+#include "instruction_tables.h"
 #include <stdbool.h>
 
 typedef struct {
@@ -28,17 +28,20 @@ MunitResult parse_instruction_ora_immediate_test(const MunitParameter *params, v
     munit_logf(MUNIT_LOG_INFO, "%s", test.input);
     instruction ins;
     error_parse error;
-    const char* new_cursor = ins_parse_ora(test.input, &ins, &error);
+    munit_assert_memory_equal(3, test.input, "ora");
+    test.input += 3;
+    const char* new_cursor = ins_util_parse_operand(test.input, &ins, ins_table_ora, &error);
+    munit_logf(MUNIT_LOG_INFO, "newc: '%s', '%s'", new_cursor, test.input);
     munit_assert_int(error, ==, test.expected.error);
     if (test.expected.ok) {
-      munit_assert_ptr_not_equal(tests[i].input, new_cursor);
+      munit_assert_ptr_not_equal(test.input, new_cursor);
       munit_assert_int(ins.length, ==, test.expected.ins.length);
       munit_assert_int(ins.opcode, ==, test.expected.ins.opcode);
       munit_assert_int(ins.byte1,  ==, test.expected.ins.byte1);
       munit_assert_int(ins.byte2,  ==, test.expected.ins.byte2);
     }
     else
-      munit_assert_ptr_equal(tests[i].input, new_cursor);
+      munit_assert_ptr_equal(test.input, new_cursor);
   }
   return MUNIT_OK;
 }
@@ -61,17 +64,19 @@ MunitResult parse_instruction_ora_zpx_test(const MunitParameter *params, void *f
     munit_logf(MUNIT_LOG_INFO, "%s", test.input);
     instruction ins;
     error_parse error;
-    const char* new_cursor = ins_parse_ora(test.input, &ins, &error);
+    munit_assert_memory_equal(3, test.input, "ora");
+    test.input += 3;
+    const char* new_cursor = ins_util_parse_operand(test.input, &ins, ins_table_ora, &error);
     munit_assert_int(error, ==, test.expected.error);
     if (test.expected.ok) {
-      munit_assert_ptr_not_equal(tests[i].input, new_cursor);
+      munit_assert_ptr_not_equal(test.input, new_cursor);
       munit_assert_int(ins.length, ==, test.expected.ins.length);
       munit_assert_int(ins.opcode, ==, test.expected.ins.opcode);
       munit_assert_int(ins.byte1,  ==, test.expected.ins.byte1);
       munit_assert_int(ins.byte2,  ==, test.expected.ins.byte2);
     }
     else
-      munit_assert_ptr_equal(tests[i].input, new_cursor);
+      munit_assert_ptr_equal(test.input, new_cursor);
   }
   return MUNIT_OK;
 }
@@ -92,20 +97,23 @@ MunitResult parse_instruction_ora_zp_test(const MunitParameter *params, void *fi
 
   for (int i = 0; tests[i].input; i++) {
     parse_ins_struct test = tests[i];
-    munit_logf(MUNIT_LOG_INFO, "%s", test.input);
+    munit_logf(MUNIT_LOG_INFO, "'%s'", test.input);
     instruction ins;
     error_parse error;
-    const char* new_cursor = ins_parse_ora(test.input, &ins, &error);
+    munit_assert_memory_equal(3, test.input, "ora");
+    test.input += 3;
+    const char* new_cursor = ins_util_parse_operand(test.input, &ins, ins_table_ora, &error);
+    munit_logf(MUNIT_LOG_INFO, "newc: '%s'", new_cursor);
     munit_assert_int(error, ==, test.expected.error);
     if (test.expected.ok) {
-      munit_assert_ptr_not_equal(tests[i].input, new_cursor);
+      munit_assert_ptr_not_equal(test.input, new_cursor);
       munit_assert_int(ins.length, ==, test.expected.ins.length);
       munit_assert_int(ins.opcode, ==, test.expected.ins.opcode);
       munit_assert_int(ins.byte1,  ==, test.expected.ins.byte1);
       munit_assert_int(ins.byte2,  ==, test.expected.ins.byte2);
     }
     else
-      munit_assert_ptr_equal(tests[i].input, new_cursor);
+      munit_assert_ptr_equal(test.input, new_cursor);
   }
   return MUNIT_OK;
 }
@@ -130,17 +138,19 @@ MunitResult parse_instruction_ora_absolute_test (const MunitParameter *params, v
     munit_logf(MUNIT_LOG_INFO, "%s", test.input);
     instruction ins;
     error_parse error;
-    const char* new_cursor = ins_parse_ora(test.input, &ins, &error);
+    munit_assert_memory_equal(3, test.input, "ora");
+    test.input += 3;
+    const char* new_cursor = ins_util_parse_operand(test.input, &ins, ins_table_ora, &error);
     munit_assert_int(error, ==, test.expected.error);
     if (test.expected.ok) {
-      munit_assert_ptr_not_equal(tests[i].input, new_cursor);
+      munit_assert_ptr_not_equal(test.input, new_cursor);
       munit_assert_int(ins.length, ==, test.expected.ins.length);
       munit_assert_int(ins.opcode, ==, test.expected.ins.opcode);
       munit_assert_int(ins.byte1,  ==, test.expected.ins.byte1);
       munit_assert_int(ins.byte2,  ==, test.expected.ins.byte2);
     }
     else
-      munit_assert_ptr_equal(tests[i].input, new_cursor);
+      munit_assert_ptr_equal(test.input, new_cursor);
   }
   return MUNIT_OK;
 }
@@ -160,17 +170,19 @@ MunitResult parse_instruction_ora_absolutex_test(const MunitParameter *params, v
     munit_logf(MUNIT_LOG_INFO, "%s", test.input);
     instruction ins;
     error_parse error;
-    const char* new_cursor = ins_parse_ora(test.input, &ins, &error);
+    munit_assert_memory_equal(3, test.input, "ora");
+    test.input += 3;
+    const char* new_cursor = ins_util_parse_operand(test.input, &ins, ins_table_ora, &error);
     munit_assert_int(error, ==, test.expected.error);
     if (test.expected.ok) {
-      munit_assert_ptr_not_equal(tests[i].input, new_cursor);
+      munit_assert_ptr_not_equal(test.input, new_cursor);
       munit_assert_int(ins.length, ==, test.expected.ins.length);
       munit_assert_int(ins.opcode, ==, test.expected.ins.opcode);
       munit_assert_int(ins.byte1,  ==, test.expected.ins.byte1);
       munit_assert_int(ins.byte2,  ==, test.expected.ins.byte2);
     }
     else
-      munit_assert_ptr_equal(tests[i].input, new_cursor);
+      munit_assert_ptr_equal(test.input, new_cursor);
   }
   return MUNIT_OK;
 }
@@ -190,17 +202,19 @@ MunitResult parse_instruction_ora_absolutey_test(const MunitParameter *params, v
     munit_logf(MUNIT_LOG_INFO, "%s", test.input);
     instruction ins;
     error_parse error;
-    const char* new_cursor = ins_parse_ora(test.input, &ins, &error);
+    munit_assert_memory_equal(3, test.input, "ora");
+    test.input += 3;
+    const char* new_cursor = ins_util_parse_operand(test.input, &ins, ins_table_ora, &error);
     munit_assert_int(error, ==, test.expected.error);
     if (test.expected.ok) {
-      munit_assert_ptr_not_equal(tests[i].input, new_cursor);
+      munit_assert_ptr_not_equal(test.input, new_cursor);
       munit_assert_int(ins.length, ==, test.expected.ins.length);
       munit_assert_int(ins.opcode, ==, test.expected.ins.opcode);
       munit_assert_int(ins.byte1,  ==, test.expected.ins.byte1);
       munit_assert_int(ins.byte2,  ==, test.expected.ins.byte2);
     }
     else
-      munit_assert_ptr_equal(tests[i].input, new_cursor);
+      munit_assert_ptr_equal(test.input, new_cursor);
   }
   return MUNIT_OK;
 }
@@ -221,17 +235,19 @@ MunitResult parse_instruction_ora_indirectx_test(const MunitParameter *params, v
     munit_logf(MUNIT_LOG_INFO, "%s", test.input);
     instruction ins;
     error_parse error;
-    const char* new_cursor = ins_parse_ora(test.input, &ins, &error);
+    munit_assert_memory_equal(3, test.input, "ora");
+    test.input += 3;
+    const char* new_cursor = ins_util_parse_operand(test.input, &ins, ins_table_ora, &error);
     munit_assert_int(error, ==, test.expected.error);
     if (test.expected.ok) {
-      munit_assert_ptr_not_equal(tests[i].input, new_cursor);
+      munit_assert_ptr_not_equal(test.input, new_cursor);
       munit_assert_int(ins.length, ==, test.expected.ins.length);
       munit_assert_int(ins.opcode, ==, test.expected.ins.opcode);
       munit_assert_int(ins.byte1,  ==, test.expected.ins.byte1);
       munit_assert_int(ins.byte2,  ==, test.expected.ins.byte2);
     }
     else
-      munit_assert_ptr_equal(tests[i].input, new_cursor);
+      munit_assert_ptr_equal(test.input, new_cursor);
   }
   return MUNIT_OK;
 }
@@ -253,17 +269,19 @@ MunitResult parse_instruction_ora_indirecty_test(const MunitParameter *params, v
     munit_logf(MUNIT_LOG_INFO, "%s", test.input);
     instruction ins;
     error_parse error;
-    const char* new_cursor = ins_parse_ora(test.input, &ins, &error);
+    munit_assert_memory_equal(3, test.input, "ora");
+    test.input += 3;
+    const char* new_cursor = ins_util_parse_operand(test.input, &ins, ins_table_ora, &error);
     munit_assert_int(error, ==, test.expected.error);
     if (test.expected.ok) {
-      munit_assert_ptr_not_equal(tests[i].input, new_cursor);
+      munit_assert_ptr_not_equal(test.input, new_cursor);
       munit_assert_int(ins.length, ==, test.expected.ins.length);
       munit_assert_int(ins.opcode, ==, test.expected.ins.opcode);
       munit_assert_int(ins.byte1,  ==, test.expected.ins.byte1);
       munit_assert_int(ins.byte2,  ==, test.expected.ins.byte2);
     }
     else
-      munit_assert_ptr_equal(tests[i].input, new_cursor);
+      munit_assert_ptr_equal(test.input, new_cursor);
   }
   return MUNIT_OK;
 }

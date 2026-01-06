@@ -22,6 +22,8 @@ const char* parser_errors_str(error_parse code) {
       return "Expected ')'";
     case ERROR_PARSE_EXPECTED_HASH:
       return "Expected '#'";
+    case ERROR_PARSE_EXPECTED_ACCUMULATOR:
+      return "Expected 'A'";
     case ERROR_PARSE_NULL_CURSOR:
       return "Null cursor";
     case ERROR_PARSE_BYTE_DIR_TOO_LONG:
@@ -32,6 +34,9 @@ const char* parser_errors_str(error_parse code) {
       return "Unexpected name";
     case ERROR_PARSE_EXPECTED_COLON:
       return "Expected ':'";
+    case ERROR_PARSE_UNSUPPORTED_ADDR_MODE:
+      return "Unsupported addressing mode";
+
   }
   fprintf(stderr, "code: %d\n", code);
   assert(0 && "Unreachable");

@@ -12,6 +12,8 @@ SOURCES := $(SRC)/fileutil.c\
            $(SRC)/parser.c\
            $(SRC)/parser_directive.c\
            $(SRC)/parser_instruction.c\
+           $(SRC)/parser_instruction_util.c\
+           $(SRC)/instruction_tables.c\
            $(SRC)/parser_operand.c\
            $(SRC)/parser_label.c\
            $(SRC)/parser_util.c\
