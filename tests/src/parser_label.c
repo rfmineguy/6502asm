@@ -32,7 +32,7 @@ MunitResult parse_label_named_test(const MunitParameter *params, void *fixture) 
     { "a_b_c:", { true,  "a_b_c", 5,        ERROR_PARSE_NONE } },
     { LONG ":", { true,  LONG   , LONG_LEN, ERROR_PARSE_NONE } },
     /* this is an unnamed label, and should fail if parsed as a named label */
-    { ":",      { false, {        }, ERROR_PARSE_NONE } },
+    { ":",      { false, ""     , -1      , ERROR_PARSE_NONE } },
     { NULL }
   };
 
