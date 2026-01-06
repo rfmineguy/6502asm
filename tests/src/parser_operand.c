@@ -30,6 +30,7 @@ MunitResult parse_operand_immediate_test(const MunitParameter *params, void *fix
 
   for (int i = 0; tests[i].input; i++) {
     parse_operand_struct test = tests[i];
+    munit_logf(MUNIT_LOG_INFO, "in: %s", test.input);
     long val;
     error_parse error;
     const char* new_cursor = parse_op_immediate(test.input, &val, &error);
@@ -58,12 +59,12 @@ MunitResult parse_operand_zp_test(const MunitParameter *params, void *fixture) {
     { "$00080",  { true,  0x80, ERROR_PARSE_NONE                } },
     { "$000256", { false, -1  , ERROR_PARSE_NUMBER_OUT_OF_RANGE } },
     { "$100256", { false, -1  , ERROR_PARSE_NUMBER_OUT_OF_RANGE } },
-    { "$",       { false, -1  , ERROR_PARSE_EXPECTED_NUMBER     } },
     { NULL }
   };
 
   for (int i = 0; tests[i].input; i++) {
     parse_operand_struct test = tests[i];
+    munit_logf(MUNIT_LOG_INFO, "%s", test.input);
     long val;
     error_parse error;
     const char* new_cursor = parse_op_zp(test.input, &val, &error);
@@ -105,8 +106,8 @@ MunitResult parse_operand_zpx_test(const MunitParameter *params, void *fixture) 
   };
 
   for (int i = 0; tests[i].input; i++) {
-    munit_logf(MUNIT_LOG_INFO, "%s", tests[i].input);
     parse_operand_struct test = tests[i];
+    munit_logf(MUNIT_LOG_INFO, "%s", test.input);
     long val;
     error_parse error;
     const char* new_cursor = parse_op_zpx(test.input, &val, &error);

@@ -41,8 +41,9 @@ const char* util_parse_number(const char* cursor, long* num_out, error_parse* er
 
   // NOTE: Is this ok to do? The idea is that it is setting errno to something that strtol
   //  will never set it to, thus allowing me to accurately judge if strtol set errno internally
+  errno = 0;
   *num_out = strtol(cursor, &end, base);
-  if (*num_out == 0) {
+  if (end == cursor) {
     if (errno == EINVAL || errno == ERANGE) {
       fprintf(stderr, "Failed to convert to number (reason: %s)\n", strerror(errno));
       fprintf(stderr, "%-5s\n", cursor);

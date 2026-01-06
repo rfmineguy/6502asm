@@ -41,6 +41,7 @@ MunitResult parse_util_parse_number_test(const MunitParameter *params, void *fix
     {false, "#$1372asfdshy",{ false, 0,       "#$1372asfdshy", ERROR_PARSE_EXPECTED_NUMBER } },
     {false, "",             { false, 0,       ""             , ERROR_PARSE_EXPECTED_NUMBER } },
     {false, "$",            { false, 0,       ""             , ERROR_PARSE_EXPECTED_NUMBER } },
+    {false, "$0",           { true , 0,       ""             , ERROR_PARSE_NONE } },
     {false, 0,              { false, 0,       0              , ERROR_PARSE_NONE } },
     {true,  NULL, 0}
   };
@@ -48,7 +49,7 @@ MunitResult parse_util_parse_number_test(const MunitParameter *params, void *fix
   for (int i = 0; !tests[i].end; i++) {
     parse_number_struct test = tests[i];
     const char* s = test.input;
-    // munit_logf(MUNIT_LOG_INFO, "input: %s", s);
+    munit_logf(MUNIT_LOG_INFO, "input: %s", s);
 
     long num;
     error_parse error;
