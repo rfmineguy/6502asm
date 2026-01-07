@@ -3,6 +3,7 @@
 MunitResult fileutil_read_test(const MunitParameter params[], void* fixture);
 
 MunitResult parse_util_parse_number_test(const MunitParameter params[], void* fixture);
+MunitResult parse_util_parse_expr_test(const MunitParameter *params, void *fixture);
 MunitResult parse_util_alphalen_test(const MunitParameter *params, void *fixture);
 MunitResult parse_util_isnewline_test(const MunitParameter *params, void *fixture);
 MunitResult parse_util_predlen_test(const MunitParameter *params, void *fixture);

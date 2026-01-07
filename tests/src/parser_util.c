@@ -16,6 +16,15 @@ typedef struct {
 typedef struct {
   const char* input;
   struct {
+    bool ok;
+    expr expr;
+    error_parse error;
+  } expected;
+} parse_expr_struct;
+
+typedef struct {
+  const char* input;
+  struct {
     int len;
   } expected;
 } alphalen_struct;
@@ -60,6 +69,68 @@ MunitResult parse_util_parse_number_test(const MunitParameter *params, void *fix
       munit_assert_long(num, ==, tests[i].expected.number);
       munit_assert_char(*s, ==, *tests[i].expected.remaining);
       munit_assert_string_equal(s, tests[i].expected.remaining);
+    }
+    else
+      munit_assert_ptr_equal(s, test.input);
+  }
+
+  return MUNIT_OK;
+}
+
+MunitResult parse_util_parse_expr_test(const MunitParameter *params, void *fixture) {
+  parse_expr_struct tests[] = {
+    {"52746daf",     { true , (expr) {.type = ET_LITERAL, .trunc_mode = TM_NONE, .data.val = 52746               }, ERROR_PARSE_NONE } },
+    {"01afd",        { true , (expr) {.type = ET_LITERAL, .trunc_mode = TM_NONE, .data.val =1,                   }, ERROR_PARSE_NONE } },
+    {"00005afd",     { true , (expr) {.type = ET_LITERAL, .trunc_mode = TM_NONE, .data.val =5,                   }, ERROR_PARSE_NONE } },
+    {"0afd",         { true , (expr) {.type = ET_LITERAL, .trunc_mode = TM_NONE, .data.val =0,                   }, ERROR_PARSE_NONE } },
+    {"000afd",       { true , (expr) {.type = ET_LITERAL, .trunc_mode = TM_NONE, .data.val =0,                   }, ERROR_PARSE_NONE } },
+    {"213afajfa fl", { true , (expr) {.type = ET_LITERAL, .trunc_mode = TM_NONE, .data.val =213,                 }, ERROR_PARSE_NONE } },
+    {"$4214asfdshy", { true , (expr) {.type = ET_LITERAL, .trunc_mode = TM_NONE, .data.val =0x4214a              }, ERROR_PARSE_NONE } },
+    {"asfdshy",      { true , (expr) {.type = ET_LABEL  , .trunc_mode = TM_NONE, .data.label={"asfdshy", .len=7} }, ERROR_PARSE_NONE } },
+    {"hello",        { true , (expr) {.type = ET_LABEL  , .trunc_mode = TM_NONE, .data.label={"hello",   .len=5} }, ERROR_PARSE_NONE } },
+    {"#$1372asfdshy",{ false, (expr) {0}                                                                          , ERROR_PARSE_EXPECTED_NUMBER } },
+    {"",             { false, (expr) {0}                                                                          , ERROR_PARSE_EXPECTED_NUMBER } },
+    {"$",            { false, (expr) {0}                                                                          , ERROR_PARSE_EXPECTED_NUMBER } },
+    {"$0",           { true , (expr) {.type = ET_LITERAL, .trunc_mode = TM_NONE, .data.val = 0                   }, ERROR_PARSE_NONE } },
+    /* truncation should happen at emit time, even for literals */
+    {"<$4530",       { true , (expr) {.type = ET_LITERAL, .trunc_mode = TM_LOW,  .data.val = 0x4530              }, ERROR_PARSE_NONE } },
+    {">$4530",       { true , (expr) {.type = ET_LITERAL, .trunc_mode = TM_HIGH, .data.val = 0x4530              }, ERROR_PARSE_NONE } },
+    {"<$45",         { false, (expr) {0}                                                                          , ERROR_PARSE_NUMBER_OUT_OF_RANGE } },
+    {">$30",         { false, (expr) {0}                                                                          , ERROR_PARSE_NUMBER_OUT_OF_RANGE } },
+    {">hello",       { true , (expr) {.type = ET_LABEL  , .trunc_mode = TM_HIGH, .data.label={"hello", .len=5}   }, ERROR_PARSE_NONE } },
+    {"<hello",       { true , (expr) {.type = ET_LABEL  , .trunc_mode = TM_LOW,  .data.label={"hello", .len=5}   }, ERROR_PARSE_NONE } },
+    /* truncating nothing */
+    {"<",            { false, (expr) {0}                                                                          , ERROR_PARSE_EXPECTED_NUMBER } },
+    {0,              { false, (expr) {0}                                                                          , ERROR_PARSE_NUMBER_OUT_OF_RANGE } },
+    {NULL}
+  };
+
+  for (int i = 0; tests[i].input; i++) {
+    parse_expr_struct test = tests[i];
+    const char* s = test.input;
+    munit_logf(MUNIT_LOG_INFO, "input: %s", s);
+
+    expr expr;
+    error_parse error;
+    s = util_parse_expr(s, &expr, &error);
+    munit_logf(MUNIT_LOG_INFO, "s: %s", s);
+    if (test.expected.ok) {
+      munit_assert_int(error, ==, test.expected.error);
+      munit_assert_ptr_not_null(s);
+      munit_assert_ptr_not_equal(s, test.input);
+      munit_assert_long(expr.trunc_mode, ==, tests[i].expected.expr.trunc_mode);
+      munit_assert_long(expr.type      , ==, tests[i].expected.expr.type);
+      switch (expr.type) {
+        case ET_LABEL:
+          munit_assert_long(expr.data.label.len, ==, tests[i].expected.expr.data.label.len);
+          munit_assert_memory_equal(expr.data.label.len, expr.data.label.s, tests[i].expected.expr.data.label.s);
+          break;
+        case ET_LABEL_REL:
+          break;
+        case ET_LITERAL:
+          munit_assert_long(expr.data.val, ==, tests[i].expected.expr.data.val);
+          break;
+      }
     }
     else
       munit_assert_ptr_equal(s, test.input);

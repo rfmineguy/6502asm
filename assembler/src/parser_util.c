@@ -5,6 +5,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include <limits.h>
 
 static int ishex(char c) {
     c = tolower(c);
@@ -52,6 +53,66 @@ const char* util_parse_number(const char* cursor, long* num_out, error_parse* er
   }
   errno = ERROR_PARSE_NONE;
   return end;
+}
+
+const char* util_parse_expr(const char* cursor, expr* exp_out, error_parse* error) {
+  assert(exp_out && "Must call parse_expr with non null exp_out");
+  assert(error && "Must call parse_expr with non null error");
+  const char* orig = cursor;
+
+  *error = ERROR_PARSE_NONE;
+  if (cursor == NULL) {
+      *error = ERROR_PARSE_NULL_CURSOR;
+      return NULL;
+  }
+  if (*cursor == 0) {
+      *error = ERROR_PARSE_EXPECTED_NUMBER;
+      return orig;
+  }
+
+  int base = 10, len;
+  truncate_mode trunc_mode = TM_NONE;
+  if      (*cursor == '>') { trunc_mode = TM_HIGH; cursor++; }
+  else if (*cursor == '<') { trunc_mode = TM_LOW;  cursor++; }
+  if (*cursor == '$') { base = 16;            cursor++; }
+  if ((len = util_alphalen(cursor)) > 0) {
+    // label next of length 'len'
+    exp_out->type = ET_LABEL;
+    exp_out->trunc_mode = trunc_mode;
+    exp_out->data.label.s = cursor;
+    exp_out->data.label.len = len;
+    return cursor + len;
+  }
+  else {
+    if (base == 10 && !isdigit(*cursor)) {
+      *error = ERROR_PARSE_EXPECTED_NUMBER;
+      return orig;
+    }
+    if (base == 16 && !ishex(*cursor)) {
+      *error = ERROR_PARSE_EXPECTED_NUMBER;
+      return orig;
+    }
+    exp_out->type = ET_LITERAL;
+    exp_out->trunc_mode = trunc_mode;
+    errno = 0;
+    char* end;
+
+    // parse out the number
+    exp_out->data.val = strtol(cursor, &end, base);
+    if (end == cursor) {
+      if (errno == EINVAL || errno == ERANGE) {
+        fprintf(stderr, "Failed to convert to number (reason: %s)\n", strerror(errno));
+        fprintf(stderr, "%-5s\n", cursor);
+        return orig;
+      }
+    }
+    // truncating single bytes is not possible
+    if (exp_out->trunc_mode != TM_NONE && exp_out->data.val <= UCHAR_MAX) {
+      *error = ERROR_PARSE_NUMBER_OUT_OF_RANGE;
+      return orig;
+    }
+    return end;
+  }
 }
 
 int util_alphalen(const char* cursor) {
