@@ -40,8 +40,8 @@ instruction ins_table_asl[AM_LAST_] = {
   [IMM ] = {.length = 0 },
   [ZP  ] = {.length = 2, .opcode = 0x06 },
   [ZPX ] = {.length = 2, .opcode = 0x16 },
-  [ABSX] = {.length = 2, .opcode = 0x0e },
-  [ABSY] = {.length = 2, .opcode = 0x1e },
-  [ABS ] = {.length = 0 },
+  [ABSX] = {.length = 3, .opcode = 0x1e },
+  [ABSY] = {.length = 0 },
+  [ABS ] = {.length = 3, .opcode = 0x0e },
   [IMP ] = {.length = 0 },
 };

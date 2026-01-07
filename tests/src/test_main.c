@@ -44,6 +44,15 @@ MunitTest parse_instruction_pha[] = {
   {NULL, NULL, NULL, 0, MUNIT_TEST_OPTION_NONE},
 };
 
+MunitTest parse_instruction_asl[] = {
+  {"/acc",      parse_instruction_asl_accumulator_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  {"/zp",       parse_instruction_asl_zp_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  {"/zpx",      parse_instruction_asl_zpx_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  {"/abs",      parse_instruction_asl_abs_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  {"/absx",     parse_instruction_asl_absx_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  {NULL, NULL, NULL, 0, MUNIT_TEST_OPTION_NONE},
+};
+
 MunitTest parse_label[] = {
   {"/named",    parse_label_named_test,   NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
   {"/unnamed",  parse_label_unnamed_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL},
@@ -53,6 +62,7 @@ MunitTest parse_label[] = {
 MunitSuite parse_instruction[] = {
   {"/ora",       parse_instruction_ora, NULL, 1, MUNIT_SUITE_OPTION_NONE },
   {"/pha",       parse_instruction_pha, NULL, 1, MUNIT_SUITE_OPTION_NONE },
+  {"/asl",       parse_instruction_asl, NULL, 1, MUNIT_SUITE_OPTION_NONE },
   {NULL, NULL, NULL, 0, MUNIT_SUITE_OPTION_NONE},
 };
 

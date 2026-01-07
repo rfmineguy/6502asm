@@ -28,6 +28,12 @@ MunitResult parse_instruction_ora_absolute_test (const MunitParameter *params, v
 
 MunitResult parse_instruction_pha_implied_test(const MunitParameter *params, void *fixture);
 
+MunitResult parse_instruction_asl_accumulator_test(const MunitParameter *params, void *fixture);
+MunitResult parse_instruction_asl_zp_test         (const MunitParameter *params, void *fixture);
+MunitResult parse_instruction_asl_zpx_test        (const MunitParameter *params, void *fixture);
+MunitResult parse_instruction_asl_abs_test        (const MunitParameter *params, void *fixture);
+MunitResult parse_instruction_asl_absx_test       (const MunitParameter *params, void *fixture);
+
 MunitResult parse_directive_org_test(const MunitParameter *params, void *fixture);
 MunitResult parse_directive_byte_test(const MunitParameter *params, void *fixture);
 

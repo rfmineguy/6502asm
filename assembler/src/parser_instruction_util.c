@@ -21,7 +21,8 @@ const char* ins_util_parse_operand(const char* cursor, instruction* ins_out, ins
 
   // accumulator
   if (table[ACC].length == 0) {
-    *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
+    if (*error == ERROR_PARSE_NONE)
+      *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
     goto skip_op_acc;
   }
   if ((new_cursor = parse_op_accumulator(cursor, error)) != cursor) {
@@ -34,7 +35,8 @@ skip_op_acc:
   // order matters for zp
   // (indirect, X)
   if (table[INDX].length == 0) {
-    *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
+    if (*error == ERROR_PARSE_NONE)
+      *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
     goto skip_op_indx;
   }
   if ((new_cursor = parse_op_indirectx(cursor, &val, error)) != cursor) {
@@ -48,7 +50,8 @@ skip_op_acc:
 skip_op_indx:
   // (indirect), Y
   if (table[INDY].length == 0) {
-    *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
+    if (*error == ERROR_PARSE_NONE)
+      *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
     goto skip_op_indy;
   }
   if ((new_cursor = parse_op_indirecty(cursor, &val, error)) != cursor) {
@@ -61,7 +64,8 @@ skip_op_indx:
 skip_op_indy:
   // immediate
   if (table[IMM].length == 0) {
-    *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
+    if (*error == ERROR_PARSE_NONE)
+      *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
     goto skip_op_imm;
   }
   if ((new_cursor = parse_op_immediate(cursor, &val, error)) != cursor) {
@@ -74,7 +78,8 @@ skip_op_indy:
 skip_op_imm:
   // zero page
   if (table[ZP].length == 0) {
-    *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
+    if (*error == ERROR_PARSE_NONE)
+      *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
     goto skip_op_zp;
   }
   if ((new_cursor = parse_op_zp(cursor, &val, error)) != cursor) {
@@ -91,7 +96,8 @@ skip_op_zp:
 
   // zero page, X
   if (table[ZPX].length == 0) {
-    *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
+    if (*error == ERROR_PARSE_NONE)
+      *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
     goto skip_op_absx;
   }
   if ((new_cursor = parse_op_zpx(cursor, &val, error)) != cursor) {
@@ -107,7 +113,8 @@ skip_op_zp:
 skip_op_absx:
   // absolute, X
   if (table[ABSX].length == 0) {
-    *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
+    if (*error == ERROR_PARSE_NONE)
+      *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
     goto skip_op_absy;
   }
   if ((new_cursor = parse_op_absolutex(cursor, &val, error)) != cursor) {
@@ -122,7 +129,8 @@ skip_op_absx:
 skip_op_absy:
   // absolute, Y
   if (table[ABSY].length == 0) {
-    *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
+    if (*error == ERROR_PARSE_NONE)
+      *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
     goto skip_op_abs;
   }
   if ((new_cursor = parse_op_absolutey(cursor, &val, error)) != cursor) {
@@ -135,7 +143,8 @@ skip_op_absy:
 skip_op_abs:
   // absolute
   if (table[ABS].length == 0) {
-    *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
+    if (*error == ERROR_PARSE_NONE)
+      *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
     goto skip_op_implied;
   }
   if ((new_cursor = parse_op_absolute(cursor, &val, error)) != cursor) {
@@ -147,7 +156,8 @@ skip_op_abs:
 skip_op_implied:
   // implied
   if (table[IMP].length == 0) {
-    *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
+    if (*error == ERROR_PARSE_NONE)
+      *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
     return orig;
   }
   *ins_out = (instruction){.length = table[IMP].length, .opcode = table[IMP].opcode, .byte1 = val & 0xff, .byte2 = (val >> 8) & 0xff};
