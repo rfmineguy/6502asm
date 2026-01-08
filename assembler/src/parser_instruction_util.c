@@ -160,10 +160,24 @@ skip_op_implied:
   if (table[IMP].length == 0) {
     if (*error == ERROR_PARSE_NONE)
       *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
+    goto skip_op_relative;
     return orig;
   }
   *ins_out = (instruction){.length = table[IMP].length, .opcode = table[IMP].opcode, .byte1 = val & 0xff, .byte2 = (val >> 8) & 0xff};
   *error = ERROR_PARSE_NONE;
+  return orig;
 
+skip_op_relative:
+  // relative
+  if (table[REL].length == 0) {
+    if (*error == ERROR_PARSE_NONE)
+      *error = ERROR_PARSE_UNSUPPORTED_ADDR_MODE;
+    return orig;
+  }
+  if ((new_cursor = parse_op_zp(cursor, &val, error)) != cursor) {
+    *ins_out = (instruction){.length = table[REL].length, .opcode = table[REL].opcode, .byte1 = val & 0xff, .byte2 = (val >> 8) & 0xff};
+    *error = ERROR_PARSE_NONE;
+    return new_cursor;
+  }
   return orig;
 }
