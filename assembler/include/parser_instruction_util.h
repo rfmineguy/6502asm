@@ -11,6 +11,8 @@ typedef enum {
   ABSY,
   INDX,
   INDY,
+  // IMP and REL are mutually exclusive addressing modes
+  //   an instruction can't have both
   IMP,
   REL,
   AM_LAST_

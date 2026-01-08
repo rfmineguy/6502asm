@@ -10,6 +10,8 @@ const char* ins_util_parse_operand(const char* cursor, instruction* ins_out, ins
   assert(error && "error must not be null");
   assert(ins_out && "ins_out must not be null");
   assert(table && "table must not be null");
+  if (table[REL].length != 0) assert(table[IMP].length == 0 && "REL and IMP are mutually exclusive");
+  if (table[IMP].length != 0) assert(table[REL].length == 0 && "REL and IMP are mutually exclusive");
   const char* orig = cursor;
 
   while (*cursor == ' ') cursor++;
