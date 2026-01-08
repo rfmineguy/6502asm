@@ -45,6 +45,11 @@ MunitTest parse_instruction_pha[] = {
   {NULL, NULL, NULL, 0, MUNIT_TEST_OPTION_NONE},
 };
 
+MunitTest parse_instruction_bcc[] = {
+  {"/rel",      parse_instruction_bcc_relative_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  {NULL, NULL, NULL, 0, MUNIT_TEST_OPTION_NONE},
+};
+
 MunitTest parse_instruction_asl[] = {
   {"/acc",      parse_instruction_asl_accumulator_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
   {"/zp",       parse_instruction_asl_zp_test, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
@@ -64,6 +69,7 @@ MunitSuite parse_instruction[] = {
   {"/ora",       parse_instruction_ora, NULL, 1, MUNIT_SUITE_OPTION_NONE },
   {"/pha",       parse_instruction_pha, NULL, 1, MUNIT_SUITE_OPTION_NONE },
   {"/asl",       parse_instruction_asl, NULL, 1, MUNIT_SUITE_OPTION_NONE },
+  {"/bcc",       parse_instruction_bcc, NULL, 1, MUNIT_SUITE_OPTION_NONE },
   {NULL, NULL, NULL, 0, MUNIT_SUITE_OPTION_NONE},
 };
 

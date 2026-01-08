@@ -17,6 +17,7 @@ instruction ins_table_ora[AM_LAST_] = {
   [ABSY] = {.length = 3, .opcode = 0x19 },
   [ABS ] = {.length = 3, .opcode = 0x0D },
   [IMP ] = {.length = 0 },
+  [REL ] = {.length = 0 },
 };
 
 instruction ins_table_pha[AM_LAST_] = {
@@ -44,4 +45,19 @@ instruction ins_table_asl[AM_LAST_] = {
   [ABSY] = {.length = 0 },
   [ABS ] = {.length = 3, .opcode = 0x0e },
   [IMP ] = {.length = 0 },
+  [REL ] = {.length = 0 },
+};
+
+instruction ins_table_bcc[AM_LAST_] = {
+  [ACC ] = {.length = 0 },
+  [INDX] = {.length = 0 },
+  [INDY] = {.length = 0 },
+  [IMM ] = {.length = 0 },
+  [ZP  ] = {.length = 0 },
+  [ZPX ] = {.length = 0 },
+  [ABSX] = {.length = 0 },
+  [ABSY] = {.length = 0 },
+  [ABS ] = {.length = 0 },
+  [IMP ] = {.length = 0 },
+  [REL ] = {.length = 2, .opcode = 0x90}
 };

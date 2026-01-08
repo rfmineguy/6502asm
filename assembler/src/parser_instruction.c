@@ -18,6 +18,7 @@ const char* ins_parse_instruction(const char* cursor, instruction* ins_out, erro
   if (strncmp(cursor, "ora", 3) == 0) ins_table = ins_table_ora;
   if (strncmp(cursor, "pha", 3) == 0) ins_table = ins_table_pha;
   if (strncmp(cursor, "asl", 3) == 0) ins_table = ins_table_asl;
+  if (strncmp(cursor, "bcc", 3) == 0) ins_table = ins_table_bcc;
   if (ins_table) {
     cursor+=3;
     if ((new_cursor = ins_util_parse_operand(cursor, ins_out, ins_table, error)) == cursor) {
