@@ -2,13 +2,14 @@ THIS_MAKEFILE := $(lastword $(MAKEFILE_LIST))
 THIS_DIR   := $(dir $(abspath $(THIS_MAKEFILE)))
 
 # Variables
-INCLUDE := -I$(THIS_DIR)/include
+INCLUDE := -I$(THIS_DIR)/include -I$(THIS_DIR)/libs
 SRC     := $(THIS_DIR)/src
 OUT     ?= out
 OBJ_OUT ?= $(OUT)/lib65asm
 CFG_GGO := $(THIS_DIR)/config.ggo
 
 SOURCES := $(SRC)/fileutil.c\
+           $(SRC)/codegen.c\
            $(SRC)/parser.c\
            $(SRC)/parser_directive.c\
            $(SRC)/parser_instruction.c\
@@ -17,7 +18,8 @@ SOURCES := $(SRC)/fileutil.c\
            $(SRC)/parser_operand.c\
            $(SRC)/parser_label.c\
            $(SRC)/parser_util.c\
-           $(SRC)/parser_errors.c
+           $(SRC)/parser_errors.c\
+           $(SRC)/ht_label.c
 
 MAIN    := $(SRC)/main.c\
            $(SRC)/cmdline.c
