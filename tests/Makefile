@@ -27,7 +27,7 @@ tests_always:
 	mkdir -p $(OUT)
 
 $(OUT)/test: $(TESTS_SOURCES) | tests_always $(OUT)/lib65asm.a $(TESTFILES)
-	$(CC) -o $@ $^ $(INCLUDE) -L$(OUT) -l65asm -DGIT_ROOT_BASELINE="\"$(ROOT_MAKEFILE)\""
+	$(CC) -o $@ $^ $(INCLUDE) -L$(OUT) -l65asm -DTESTFILE_DIR="\"$(TESTFILE_DIR)\""
 
 $(TESTFILES):
 	./tests/genfiles.sh $(TESTFILE_DIR)

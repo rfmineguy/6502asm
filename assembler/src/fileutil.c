@@ -44,3 +44,18 @@ const char* fu_read(const char* filename, error_file_read* error) {
   *error = ERROR_FILE_READ_NONE;
   return buf;
 }
+
+void fu_writebin(const char* filename, const uint8_t* data, size_t count, error_file_write* error) {
+  FILE* f = fopen(filename, "wb");
+  if (!f) {
+    *error = ERROR_FILE_WRITE_OPEN;
+    fclose(f);
+    return;
+  }
+  size_t bytes = fwrite(data, sizeof(uint8_t), count, f);
+  if (bytes != count) {
+    *error = ERROR_FILE_WRITE_LEN;
+    fclose(f);
+    return;
+  }
+}
