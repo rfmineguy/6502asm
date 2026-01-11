@@ -4,7 +4,7 @@ project(assembler LANGUAGES C)
 
 set(LIB_SOURCES
   src/fileutil.c
-  src/codegen.c
+  # src/codegen.c
   src/parser.c
   src/parser_directive.c
   src/parser_instruction.c
