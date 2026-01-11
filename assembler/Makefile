@@ -9,7 +9,6 @@ OBJ_OUT ?= $(OUT)/lib65asm
 CFG_GGO := $(THIS_DIR)/config.ggo
 
 SOURCES := $(SRC)/fileutil.c\
-           $(SRC)/codegen.c\
            $(SRC)/parser.c\
            $(SRC)/parser_directive.c\
            $(SRC)/parser_instruction.c\
