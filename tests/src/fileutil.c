@@ -4,6 +4,10 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <assert.h>
+#include "test1.h"
+#include "test2.h"
+#include "test3.h"
+#include "test4.h"
 
 #ifndef TESTFILE_DIR
 #error "Must define TESTFILE_DIR to be the directory with a .git folder/file"
@@ -15,6 +19,7 @@ typedef struct {
   struct {
     bool ok;
     const char* buf;
+    int len;
     error_file_read error;
   } expected;
 } fileutil_read_test_struct;
@@ -27,11 +32,11 @@ typedef struct {
 
 MunitResult fileutil_read_test(const MunitParameter params[], void* fixture) {
   fileutil_read_test_struct tests[] = {
-    { TESTFILE_DIR "/test1.txt",    { true , TEST1_CONTENT, ERROR_FILE_READ_NONE }},
-    { TESTFILE_DIR "/test2.txt",    { true , TEST2_CONTENT, ERROR_FILE_READ_NONE }},
-    { TESTFILE_DIR "/test3.txt",    { true , TEST3_CONTENT, ERROR_FILE_READ_NONE }},
-    { TESTFILE_DIR "/test4.txt",    { true , TEST4_CONTENT, ERROR_FILE_READ_NONE }},
-    { TESTFILE_DIR "/testna.txt",   { false, NULL,          ERROR_FILE_READ_OPEN }},
+    { TESTFILE_DIR "/test1.txt",    { true , (const char*)test1_txt, test1_txt_len, ERROR_FILE_READ_NONE }},
+    { TESTFILE_DIR "/test2.txt",    { true , (const char*)test2_txt, test2_txt_len, ERROR_FILE_READ_NONE }},
+    { TESTFILE_DIR "/test3.txt",    { true , (const char*)test3_txt, test3_txt_len, ERROR_FILE_READ_NONE }},
+    { TESTFILE_DIR "/test4.txt",    { true , (const char*)test4_txt, test4_txt_len, ERROR_FILE_READ_NONE }},
+    { TESTFILE_DIR "/testna.txt",   { false, NULL, 0,                               ERROR_FILE_READ_OPEN }},
     { NULL },
   };
 
@@ -42,7 +47,9 @@ MunitResult fileutil_read_test(const MunitParameter params[], void* fixture) {
     const char* buf = fu_read(test.file, &error);
     munit_assert_int(test.expected.error, ==, error);
     if (test.expected.ok) {
-      munit_assert_string_equal(test.expected.buf, buf);
+      size_t len = strlen(buf);
+      munit_assert_int(test.expected.len, ==, len);
+      munit_assert_memory_equal(len, test.expected.buf, buf);
     }
     else {
       munit_assert_ptr_null(buf);
