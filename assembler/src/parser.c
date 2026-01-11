@@ -17,14 +17,14 @@
 void parser_print_instruction(instruction ins) {
   assert(ins.length >= 1 && ins.length <= 3 && "Length 1,2,3 required");
   if (ins.length == 1) {
-    printf("Instruction(1) {opcode: %02x}\n", ins.bytes[0]);
+    printf("Instruction(1) {opcode: %02x}", ins.bytes[0]);
   }
   else if (ins.length == 2) {
-    printf("Instruction(2) {opcode: %02x, operand: %x}\n", ins.bytes[0], ins.bytes[1]);
+    printf("Instruction(2) {opcode: %02x, operand: %x}", ins.bytes[0], ins.bytes[1]);
   }
   else {
     uint16_t operand = *((uint16_t*)(ins.bytes + 1));
-    printf("Instruction(3) {opcode: %02x, operand: %x}\n", ins.bytes[0], operand);
+    printf("Instruction(3) {opcode: %02x, operand: %x}", ins.bytes[0], operand);
   }
 }
 
@@ -32,7 +32,7 @@ void parser_print_directive(directive dir) {
   switch (dir.type) {
     case dt_org:
       {
-        printf("Directive {type: org, addr: %x}\n", dir.data.org.addr);
+        printf("Directive {type: org, addr: %x}", dir.data.org.addr);
         break;
       }
     case dt_byte:
@@ -42,7 +42,7 @@ void parser_print_directive(directive dir) {
           printf("%x", dir.data.byte.bytes[i]);
           if (i != dir.data.byte.bytes_count - 1) printf(", ");
         }
-        printf("]}\n");
+        printf("]}");
         // assert(0 && "dt_byte print not implemented");
       }
   }
@@ -176,10 +176,10 @@ const char* parse_line(const char* cursor, parse_ctx* ctx, line_info* line_info_
 void parser_print_label(label label) {
   switch (label.type) {
     case lt_named:
-      printf("Label {name: %.*s}\n", label.data.named.length, label.data.named.name);
+      printf("Label {name: %.*s}", (int)label.data.named.len, label.data.named.s);
       break;
     case lt_unnamed:
-      printf("Label {<unnamed>}\n");
+      printf("Label {<unnamed>}");
       break;
   }
 }
@@ -194,7 +194,7 @@ void parser_print_error(error_parse code) {
 void parser_print_line_info_element(line_info_element el) {
   switch (el.type) {
     case lt_none:
-      printf("LineInfo: none\n");
+      printf("LineInfo: none");
       break;
     case lt_instruction:
       parser_print_instruction(el.data.instruction);
@@ -209,6 +209,7 @@ void parser_print_line_info_element(line_info_element el) {
       parser_print_error(el.data.error);
       break;
   }
+  printf("\n");
 }
 
 void parser_print_lineinfo(line_info info) {

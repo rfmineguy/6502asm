@@ -1,6 +1,7 @@
 #ifndef ASSEMBLER_DATA_H
 #define ASSEMBLER_DATA_H
 #include <stdint.h>
+#include <stddef.h>
 #include "parser_errors.h"
 
 #define _bytes(...) {__VA_ARGS__}
@@ -50,6 +51,10 @@
     .length = len,\
     .bytes = { __VA_ARGS__ }\
   }
+typedef struct {
+  const char* s;
+  size_t len;
+} string_view;
 
 typedef struct {
   uint8_t length;
@@ -89,10 +94,7 @@ typedef enum {
 typedef struct {
   label_type type;
   union {
-    struct {
-      const char* name;
-      int length;
-    } named;
+    string_view named;
     /* no data for the unnamed label */
   } data;
 } label;

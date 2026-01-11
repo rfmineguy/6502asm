@@ -32,8 +32,8 @@ const char* label_parse_named_label(const char* cursor, label* label_out, error_
   cursor++;
 
   label_out->type = lt_named;
-  label_out->data.named.name = start;
-  label_out->data.named.length = count;
+  label_out->data.named.s = start;
+  label_out->data.named.len = count;
   *error = ERROR_PARSE_NONE;
   return cursor;
 }

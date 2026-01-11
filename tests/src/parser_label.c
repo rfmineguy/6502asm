@@ -7,8 +7,7 @@ typedef struct {
   const char* input;
   struct {
     bool ok;
-    const char* name;
-    int length;
+    string_view s;
     int error;
   } expected;
 } parse_label_named_struct;
@@ -40,14 +39,14 @@ MunitResult parse_label_named_test(const MunitParameter *params, void *fixture) 
     parse_label_named_struct test = tests[i];
     label val;
     error_parse error;
-    munit_logf(MUNIT_LOG_INFO, "%s", test.input);
+    munit_logf(MUNIT_LOG_INFO, "'%s', '%*.s'", test.input, (int)test.expected.s.len, test.expected.s.s);
     const char* new_cursor = label_parse_named_label(test.input, &val, &error);
     if (test.expected.ok) {
       munit_assert_int(error, ==, ERROR_PARSE_NONE);
       munit_assert_ptr_not_equal(tests[i].input, new_cursor);
       munit_assert_int(val.type, ==, lt_named);
-      munit_assert_int(val.data.named.length, ==, tests[i].expected.length);
-      munit_assert_memory_equal(val.data.named.length, val.data.named.name, tests[i].expected.name);
+      munit_assert_int(val.data.named.len, ==, tests[i].expected.s.len);
+      munit_assert_memory_equal(val.data.named.len, val.data.named.s, tests[i].expected.s.s);
     }
     else
       munit_assert_ptr_equal(tests[i].input, new_cursor);
