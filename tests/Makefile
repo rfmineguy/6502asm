@@ -10,6 +10,9 @@ TESTFILE_DIR := $(OUT)/testfiles
 TESTFILES    := $(TESTFILE_DIR)/test1.txt\
                 $(TESTFILE_DIR)/test2.txt\
                 $(TESTFILE_DIR)/test3.txt\
+                $(TESTFILE_DIR)/test4.txt\
+
+TESTFILES_C := $(patsubst $(TESTFILE_DIR)/%.txt, $(TESTFILE_DIR)/%.h, $(TESTFILES))
 
 TESTS_SOURCES := $(THIS_DIR)/src/parser_directive.c\
                  $(THIS_DIR)/src/parser_operand.c\
@@ -25,9 +28,14 @@ TESTS_SOURCES := $(THIS_DIR)/src/parser_directive.c\
 
 tests_always:
 	mkdir -p $(OUT)
+	mkdir -p $(TESTFILE_DIR)
 
-$(OUT)/test: $(TESTS_SOURCES) | tests_always $(OUT)/lib65asm.a $(TESTFILES)
-	$(CC) -o $@ $^ $(INCLUDE) -L$(OUT) -l65asm -DTESTFILE_DIR="\"$(TESTFILE_DIR)\""
+$(OUT)/test: $(TESTS_SOURCES) | tests_always $(OUT)/lib65asm.a $(TESTFILES_C)
+	$(CC) -o $@ $^ $(INCLUDE) -Iout/testfiles -L$(OUT) -l65asm -DTESTFILE_DIR="\"$(TESTFILE_DIR)\""
 
 $(TESTFILES):
-	./tests/genfiles.sh $(TESTFILE_DIR)
+	python3 $(THIS_DIR)/genfiles.py --outdir=$(TESTFILE_DIR) -v
+
+#$(TESTFILES_C): $(TESTFILES) | $(TESTFILES)
+$(TESTFILE_DIR)/%.h: $(TESTFILE_DIR)/%.txt
+	xxd -i -n $(notdir $^) $< > $@
