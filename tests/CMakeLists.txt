@@ -30,44 +30,48 @@ set(SOURCES
   src/test_main.c
 )
 
-add_executable(tests ${SOURCES})
-target_link_libraries(tests PRIVATE lib65asm)
-add_dependencies(tests generate_test_files)
-target_include_directories(tests PRIVATE ${TESTFILE_DIR})
-target_sources(tests PRIVATE ${GENERATED_HEADERS})
+if (NOT BUILD_TEST)
+  message(STATUS "Building tests disabled")
+else()
+  add_executable(tests ${SOURCES})
+  target_link_libraries(tests PRIVATE lib65asm)
+  add_dependencies(tests generate_test_files)
+  target_include_directories(tests PRIVATE ${TESTFILE_DIR})
+  target_sources(tests PRIVATE ${GENERATED_HEADERS})
 
-target_include_directories(tests PRIVATE ${ASSEMBLER_INCLUDE_DIRS})
-target_compile_definitions(tests PRIVATE -DTESTFILE_DIR="${TESTFILE_DIR}")
+  target_include_directories(tests PRIVATE ${ASSEMBLER_INCLUDE_DIRS})
+  target_compile_definitions(tests PRIVATE -DTESTFILE_DIR="${TESTFILE_DIR}")
 
-add_test(
-  NAME lib65asm
-  COMMAND tests
-  WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-)
-
-file(COPY genfiles.py DESTINATION ${CMAKE_BINARY_DIR}/tests)
-add_custom_command(
-  OUTPUT ${TESTFILES}
-  COMMAND python3 genfiles.py --outdir=${TESTFILE_DIR} -v
-  COMMENT "Generating test files"
-)
-
-foreach(i RANGE ${_last})
-  list(GET TESTFILES ${i} infile)
-  list(GET TESTFILES_C ${i} outfile)
-  get_filename_component(basename "${infile}" NAME_WE)
-
-  add_custom_command(
-    OUTPUT "${outfile}"
-    COMMAND xxd -i -n "${basename}_txt" "${infile}" > "${outfile}"
-    DEPENDS "${infile}"
-    COMMENT "Generating ${outfile} from ${infile}"
-    VERBATIM
+  add_test(
+    NAME lib65asm
+    COMMAND tests
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
   )
 
-  list(APPEND GENERATED_HEADERS "${outfile}")
-endforeach()
+  file(COPY genfiles.py DESTINATION ${CMAKE_BINARY_DIR}/tests)
+  add_custom_command(
+    OUTPUT ${TESTFILES}
+    COMMAND python3 genfiles.py --outdir=${TESTFILE_DIR} -v
+    COMMENT "Generating test files"
+  )
 
-add_custom_target(generate_test_files ALL
-  DEPENDS ${TESTFILES_C}
-)
+  foreach(i RANGE ${_last})
+    list(GET TESTFILES ${i} infile)
+    list(GET TESTFILES_C ${i} outfile)
+    get_filename_component(basename "${infile}" NAME_WE)
+
+    add_custom_command(
+      OUTPUT "${outfile}"
+      COMMAND xxd -i -n "${basename}_txt" "${infile}" > "${outfile}"
+      DEPENDS "${infile}"
+      COMMENT "Generating ${outfile} from ${infile}"
+      VERBATIM
+    )
+
+    list(APPEND GENERATED_HEADERS "${outfile}")
+  endforeach()
+
+  add_custom_target(generate_test_files ALL
+    DEPENDS ${TESTFILES_C}
+  )
+endif()

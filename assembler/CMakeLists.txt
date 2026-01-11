@@ -4,6 +4,7 @@ project(assembler LANGUAGES C)
 
 set(LIB_SOURCES
   src/fileutil.c
+  src/codegen.c
   src/parser.c
   src/parser_directive.c
   src/parser_instruction.c
@@ -25,22 +26,35 @@ set(DRIVER_SOURCES
   driver.c
 )
 
-add_library(lib65asm STATIC ${LIB_SOURCES})
-target_include_directories(lib65asm PRIVATE include libs)
+# If you want the exe, the lib is required
+if (BUILD_EXE)
+  set(BUILD_LIB ON)
+endif()
 
-add_executable(65asm ${EXE_SOURCES})
-target_link_libraries(65asm PRIVATE lib65asm)
-target_include_directories(65asm PRIVATE include libs)
+if (BUILD_LIB)
+  add_library(lib65asm STATIC ${LIB_SOURCES})
+  target_include_directories(lib65asm PRIVATE include libs)
+else()
+  message(STATUS "Set BUILD_LIB to build lib6502asm")
+endif()
 
-add_executable(driver ${DRIVER_SOURCES})
-target_link_libraries(driver PRIVATE lib65asm)
-target_include_directories(driver PRIVATE include libs)
+if (BUILD_EXE)
+  add_executable(65asm ${EXE_SOURCES})
+  target_link_libraries(65asm PRIVATE lib65asm)
+  target_include_directories(65asm PRIVATE include libs)
 
-add_custom_command(OUTPUT
-  ${CMAKE_CURRENT_LIST_DIR}/src/cmdline.c
-  ${CMAKE_CURRENT_LIST_DIR}/src/cmdline.h
-                   COMMAND gengetopt
-                   --input=${CMAKE_CURRENT_LIST_DIR}/config.ggo
-                   --header-output-dir=${CMAKE_SOURCE_DIR}/assembler/src
-                   --src-output-dir=${CMAKE_SOURCE_DIR}/assembler/src
-                   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+  add_executable(driver ${DRIVER_SOURCES})
+  target_link_libraries(driver PRIVATE lib65asm)
+  target_include_directories(driver PRIVATE include libs)
+
+  add_custom_command(OUTPUT
+    ${CMAKE_CURRENT_LIST_DIR}/src/cmdline.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/cmdline.h
+                     COMMAND gengetopt
+                     --input=${CMAKE_CURRENT_LIST_DIR}/config.ggo
+                     --header-output-dir=${CMAKE_SOURCE_DIR}/assembler/src
+                     --src-output-dir=${CMAKE_SOURCE_DIR}/assembler/src
+                     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+else()
+  message(STATUS "Set BUILD_EXE to build 65asm and driver")
+endif()
